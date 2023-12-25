@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DocDash</string>
+    <string name="login_hint_email">user@domain.com</string>
+    <string name="login_hint_password">password</string>
 </resources>
