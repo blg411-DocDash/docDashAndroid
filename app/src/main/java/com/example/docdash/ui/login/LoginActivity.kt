@@ -1,10 +1,13 @@
 package com.example.docdash.ui.login
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.docdash.DummyActivity
 import com.example.docdash.R
-import com.example.docdash.data.loginRequest
+import com.example.docdash.data.LoginRequest
 import com.example.docdash.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -27,9 +30,25 @@ class LoginActivity : AppCompatActivity() {
             val userEmail = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            var loginRequest = loginRequest(userEmail, password)
+            val loginRequest = LoginRequest(userEmail, password)
             viewModel.login(loginRequest)
+        }
 
+        viewModel.loginStatus.observe(this) { loginSuccess ->
+            if (loginSuccess) {
+                showLoginMessage(this, "Login Success")
+                val redirectPage = Intent(this, DummyActivity::class.java)
+                startActivity(redirectPage)
+            } else {
+                showLoginMessage(this, viewModel.loginError.value.toString())
+            }
+        }
+
+    }
+
+    companion object {
+        private fun showLoginMessage(loginActivity: LoginActivity, message: String) {
+            Toast.makeText(loginActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
 }
