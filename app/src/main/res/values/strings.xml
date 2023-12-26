@@ -6,6 +6,9 @@
     <string name="my_tasks">My Tasks</string>
     <string name="task_number">Task No:</string>
     <string name="task_due">Due Date:</string>
+    <string name="tests_title">Tests:</string>
+    <string name="patient_title">Patient:</string>
+    <string name="patient_room_title">Room:</string>
 
     <string name="dummy_text_short">Lorem Ipsum</string>
     <string name="dummy_text">Lorem ipsum dolor sit amet</string>
