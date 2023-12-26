@@ -12,8 +12,8 @@
         android:layout_marginStart="4dp"
         android:text="@string/dummy_text_short"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/patientTitle"
-        app:layout_constraintTop_toTopOf="@+id/patientTitle" />
+        app:layout_constraintStart_toEndOf="@+id/patientRoomTitle"
+        app:layout_constraintTop_toTopOf="@+id/patientRoomTitle" />
 
     <TextView
         android:id="@+id/patientRoomTitle"
@@ -125,9 +125,10 @@
         android:id="@+id/patient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:text="@string/dummy_text_short"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/patientRoomTitle"
-        app:layout_constraintTop_toTopOf="@+id/patientRoomTitle" />
+        app:layout_constraintStart_toEndOf="@+id/patientTitle"
+        app:layout_constraintTop_toTopOf="@+id/patientTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
