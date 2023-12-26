@@ -2,4 +2,16 @@
     <string name="app_name">DocDash</string>
     <string name="login_hint_email">user@domain.com</string>
     <string name="login_hint_password">password</string>
+    <string name="task_pool">Task Pool</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="task_number">Task No:</string>
+    <string name="task_due">Due Date:</string>
+
+    <string name="dummy_text_short">Lorem Ipsum</string>
+    <string name="dummy_text">Lorem ipsum dolor sit amet</string>
+    <string name="dummy_text_long">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="dummy_text_very_long">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam vitae libero at urna sagittis luctus at eu erat. Phasellus nibh metus, bibendum eget laoreet sed, finibus et turpis. Nunc pellentesque id magna ut efficitur. Sed fringilla magna sit amet elit elementum vehicula. Quisque eu nunc molestie, gravida turpis vel, dapibus dui. Donec vitae erat eget risus bibendum blandit. Vivamus eget purus felis. </string>
+    <string name="dummy_number">123</string>
+    <string name="dummy_number_long">1234567890</string>
+    <string name="dummy_date">1970-01-01</string>
 </resources>

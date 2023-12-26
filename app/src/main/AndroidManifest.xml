@@ -15,7 +15,8 @@
         android:theme="@style/Theme.DocDash"
         tools:targetApi="31">
         <activity
-            android:name=".ui.availableTasks.AvailableTasksActivity"
+            android:name=".ui.taskPool.TaskPoolActivity"
+            android:theme="@style/Theme.DocDash.Layout"
             android:exported="false" />
         <activity
             android:name=".DummyActivity"

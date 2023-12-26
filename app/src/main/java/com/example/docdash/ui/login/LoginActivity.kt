@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.docdash.DummyActivity
 import com.example.docdash.R
 import com.example.docdash.data.LoginRequest
 import com.example.docdash.databinding.ActivityLoginBinding
+import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginStatus.observe(this) { loginSuccess ->
             if (loginSuccess) {
                 showLoginMessage(this, "Login Success")
-                val redirectPage = Intent(this, DummyActivity::class.java)
+                val redirectPage = Intent(this, TaskPoolActivity::class.java)
                 startActivity(redirectPage)
             } else {
                 showLoginMessage(this, viewModel.loginError.value.toString())
