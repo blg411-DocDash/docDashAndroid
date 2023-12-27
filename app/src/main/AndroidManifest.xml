@@ -15,6 +15,11 @@
         android:theme="@style/Theme.DocDash"
         tools:targetApi="31">
         <activity
+            android:name=".ui.patientDetails.PatientDetailsActivity"
+            android:label="@string/patient_details"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".ui.taskPool.TaskPoolActivity"
             android:theme="@style/Theme.DocDash.Layout"
             android:exported="false" />
