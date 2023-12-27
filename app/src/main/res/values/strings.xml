@@ -13,6 +13,8 @@
     <string name="tests_details">Tests Details:</string>
     <string name="take_task">Take Task</string>
 
+    <string name="back_to_task_details">Back to Task Details</string>
+
     <string name="dummy_text_short">Lorem Ipsum</string>
     <string name="dummy_text">Lorem ipsum dolor sit amet</string>
     <string name="dummy_text_long">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
