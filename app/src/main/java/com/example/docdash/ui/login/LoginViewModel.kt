@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-    val loginError: MutableLiveData<String> by lazy {
+    val loginMessage: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
     val loginStatus: MutableLiveData<Boolean> by lazy {
@@ -19,21 +19,21 @@ class LoginViewModel : ViewModel() {
 
     fun login(loginRequest: LoginRequest) {
         if (loginRequest.email.isNullOrEmpty()) {
-            loginError.postValue("Please enter your email")
+            loginMessage.postValue("Please enter your email")
             loginStatus.postValue(false)
             return
         }
         if (loginRequest.password.isNullOrEmpty()) {
-            loginError.postValue("Please enter your password")
+            loginMessage.postValue("Please enter your password")
             loginStatus.postValue(false)
             return
         }
         if (loginRequest.email == "" && loginRequest.password == "") {
-            loginError.postValue("Please enter your email and password")
+            loginMessage.postValue("Please enter your email and password")
             loginStatus.postValue(false)
             return
         }
-        viewModelScope.launch(Dispatchers.IO) { loginRequestHandler(loginRequest, loginError, loginStatus) }
+        viewModelScope.launch(Dispatchers.IO) { loginRequestHandler(loginRequest, loginMessage, loginStatus) }
         return
     }
 
@@ -41,10 +41,16 @@ class LoginViewModel : ViewModel() {
         suspend fun loginRequestHandler(loginRequest: LoginRequest, loginError : MutableLiveData<String>, loginStatus : MutableLiveData<Boolean>) {
             try {
                 val request = BackendAPI.backendAPI.login(loginRequest)
-                request.body()?.token?.let {
+                if(request.body()?.code == 0)
+                {
+                    ApiConstants.TOKEN= request.body()?.data?.token.toString()
+                    ApiConstants.ROLE= request.body()?.data?.role.toString()
+                    ApiConstants.NAME= request.body()?.data?.name.toString()
+                    loginError.postValue("Login Success")
                     loginStatus.postValue(true)
-                    ApiConstants.TOKEN = it
-                } ?: run {
+                }
+                else
+                {
                     loginError.postValue("Login failed due to invalid credentials.")
                     loginStatus.postValue(false)
                 }

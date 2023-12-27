@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
                 val redirectPage = Intent(this, TaskPoolActivity::class.java)
                 startActivity(redirectPage)
             } else {
-                showLoginMessage(this, viewModel.loginError.value.toString())
+                showLoginMessage(this, viewModel.loginMessage.value.toString())
             }
         }
 
