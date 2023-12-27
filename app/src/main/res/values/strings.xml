@@ -9,6 +9,9 @@
     <string name="tests_title">Tests:</string>
     <string name="patient_title">Patient:</string>
     <string name="patient_room_title">Room:</string>
+    <string name="patient_details">Patient Details:</string>
+    <string name="tests_details">Tests Details:</string>
+    <string name="take_task">Take Task</string>
 
     <string name="dummy_text_short">Lorem Ipsum</string>
     <string name="dummy_text">Lorem ipsum dolor sit amet</string>
@@ -17,4 +20,6 @@
     <string name="dummy_number">123</string>
     <string name="dummy_number_long">1234567890</string>
     <string name="dummy_date">1970-01-01</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
