@@ -44,9 +44,15 @@ fun PatientDetails() {
         .background(color = colorResource(R.color.background))
         .padding(bottom=20.dp)
         .fillMaxSize()) {
-        HeaderRow()
-        OuterContainer()
-        Spacer(modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+        ) {
+            HeaderRow()
+            OuterContainer()
+        }
+
         Button(
             onClick = { /*TODO*/ },
             shape = RoundedCornerShape(15.dp),
@@ -54,8 +60,8 @@ fun PatientDetails() {
             modifier = Modifier
                 .height(60.dp)
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 12.dp)
+                .align(Alignment.End)
         ) {
             Text(
                 text = stringResource(id = R.string.back_to_task_details),
@@ -105,7 +111,7 @@ fun OuterContainer() {
         InfoContainer {
             Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)) {
                 Text(
-                    text = "Name",
+                    text = stringResource(id = R.string.name),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -114,7 +120,7 @@ fun OuterContainer() {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                Text(text = "Mary Copper",
+                Text(text = stringResource(id = R.string.dummy_text),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -128,7 +134,7 @@ fun OuterContainer() {
         InfoContainer {
             Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)) {
                 Text(
-                    text = "Room",
+                    text = stringResource(id = R.string.room),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -137,7 +143,7 @@ fun OuterContainer() {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                Text(text = "Z02",
+                Text(text = stringResource(id = R.string.dummy_text_short),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -151,7 +157,7 @@ fun OuterContainer() {
         InfoContainer {
             Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)) {
                 Text(
-                    text = "Disease",
+                    text = stringResource(id = R.string.disease),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -160,7 +166,7 @@ fun OuterContainer() {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                Text(text = "Acute Bronchitis",
+                Text(text = stringResource(id = R.string.dummy_text_short),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -179,7 +185,7 @@ fun OuterContainer() {
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Column {
                         Text(
-                            text = "Height",
+                            text = stringResource(id = R.string.height),
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -199,7 +205,7 @@ fun OuterContainer() {
                     }
                     Column {
                         Text(
-                            text = "Weight",
+                            text = stringResource(id = R.string.weight),
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -219,7 +225,7 @@ fun OuterContainer() {
                     }
                     Column {
                         Text(
-                            text = "Age",
+                            text = stringResource(id = R.string.age),
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -228,7 +234,7 @@ fun OuterContainer() {
                                 textDecoration = TextDecoration.Underline,
                             ),
                         )
-                        Text(text = "27",
+                        Text(text = stringResource(id = R.string.dummy_number),
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -243,17 +249,19 @@ fun OuterContainer() {
         Spacer(modifier = Modifier.height(10.dp))
         val tempTestDates = listOf(
             "04.12.2023",
+            "03.12.2023",
             "03.12.2023"
         )
         val testResultsPerDate = mapOf(
             "04.12.2023" to listOf("CRP", "Whole Blood Count"),
+            "03.12.2023" to listOf("Blood Pressure", "Temperature"),
             "03.12.2023" to listOf("Blood Pressure", "Temperature"),
         )
         InfoContainer {
             Column(modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 3.dp)) {
                 Text(
-                    text = "Test Results",
+                    text = stringResource(id = R.string.test_results),
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -262,8 +270,8 @@ fun OuterContainer() {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                LazyColumn(modifier = Modifier
-                    .padding(bottom = 28.dp)) {
+                LazyColumn(
+                ) {
                     items(tempTestDates) { item ->
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(text = item,
@@ -299,7 +307,7 @@ fun OuterContainer() {
 
             }
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(1.dp))
     }
 }
 
