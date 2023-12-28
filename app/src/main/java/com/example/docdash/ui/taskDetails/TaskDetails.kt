@@ -1,9 +1,5 @@
 package com.example.docdash.ui.taskDetails
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,19 +14,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.docdash.ui.theme.DocDashTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -38,55 +35,65 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import com.example.docdash.R
-import retrofit2.http.Header
 
-class TaskDetails : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            TaskPage()
-        }
-    }
-}
-
+@Preview
 @Composable
-fun TaskPage() {
-    Surface(
+fun TaskDetails() {
+    Column(
         modifier = Modifier
-            .fillMaxSize()
             .background(color = colorResource(R.color.background))
+            .padding(bottom = 20.dp)
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                .weight(1f)
+                .fillMaxSize()
         ) {
             HeaderRow()
             TaskContainer()
-            Spacer(modifier = Modifier.height(60.dp) )
-            Row {
-                Button(
-                    onClick = { /*TODO*/ },
-                    colors = ButtonDefaults.buttonColors(Color(0xFF2D6C9B)),
-                    shape = RoundedCornerShape(size = 10.dp)
-                    ) {
-                    Text(
-                        text = stringResource(R.string.task_pool)
+        }
+        Row(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 10.dp)
+
+        ) {
+            Button(
+                onClick = { /*TODO*/ },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.task_pool),
+                    style = TextStyle(
+                        fontSize = 27.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
                     )
-                }
-                Spacer(modifier = Modifier.width(60.dp) )
-                Button(
-                    onClick = { /*TODO*/ },
-                    colors = ButtonDefaults.buttonColors(Color(0xFF2D6C9B)),
-                    shape = RoundedCornerShape(size = 10.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.my_tasks)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+            Button(
+                onClick = { /*TODO*/ },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.my_tasks),
+                    style = TextStyle(
+                        fontSize = 27.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
                     )
-                }
+                )
             }
         }
     }
@@ -104,7 +111,7 @@ fun HeaderRow() {
         Icon(painter = painterResource(id = R.drawable.profile),
             contentDescription = "Profile Icon",
             tint = Color(0xFFFFFFFF),)
-        Spacer(modifier = Modifier.width(60.dp))
+        Spacer(modifier = Modifier.width(25.dp))
         Text(text = stringResource(id = R.string.task_details),
             style = TextStyle(
                 fontSize = 30.sp,
@@ -122,22 +129,20 @@ fun TaskContainer(){
         fontSize = 25.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
         fontWeight = FontWeight(700),
-        color = Color(0xFF002540),
+        color = colorResource(id = R.color.dark_blue)
         )
     Column(
         modifier = Modifier
-            .width(316.dp)
-            .height(581.dp)
-            .background(color = Color(0xFFB8F5E9)),
-        verticalArrangement = Arrangement.Center,
+            .padding(horizontal = 24.dp)
+            .padding(top = 28.dp)
+            .background(color = colorResource(R.color.container_bg)),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Row(
             modifier = Modifier
-                .width(316.dp)
-                .height(52.dp)
+                .fillMaxWidth()
                 .background(color = Color(0xFFE3DE56))
-                .padding(5.dp),
+                .padding(8.dp)
         ){
             Text(
                 text = stringResource(R.string.task_number),
@@ -152,12 +157,22 @@ fun TaskContainer(){
         PatientContainer()
         TestContainer()
         Button(
-            onClick = { /*TODO*/ } ,
-            colors = ButtonDefaults.buttonColors(Color(0xFF2D6C9B)),
-            shape = RoundedCornerShape(size = 10.dp)
+            onClick = { /*TODO*/ },
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green)),
+            shape = RoundedCornerShape(size = 10.dp),
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 30.dp)
+                .shadow(elevation = 15.dp, spotColor = Color(0x80000000), ambientColor = Color(0x80000000))
         ) {
             Text(
-                text = stringResource(R.string.take_task)
+                text = stringResource(id = R.string.take_task),
+                style = TextStyle(
+                    fontSize = 30.sp,
+                    fontFamily = FontFamily(Font(R.font.fonts)),
+                    fontWeight = FontWeight(700),
+                    color = colorResource(id = R.color.dark_blue),
+                    textAlign = TextAlign.Center,
+                )
             )
         }
     }
@@ -165,96 +180,170 @@ fun TaskContainer(){
 
 @Composable
 fun TaskDescription(){
-    Column(
-        modifier = Modifier
-            .width(291.dp)
-            .height(91.40204.dp)
-            .background(color = Color(0xE5E4FCFF)),
-            verticalArrangement = Arrangement.Center
-    ){
-        Text(
-            text = stringResource(R.string.dummy_text),
-            style = TextStyle(
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.fonts)),
-                fontWeight = FontWeight(600),
-                color = Color(0xFF04385F),
-            )
+    InfoContainer{
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+                .sizeIn(minHeight = 50.dp, maxHeight = 80.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(
+                text = stringResource(R.string.dummy_text_very_long),
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.fonts)),
+                    fontWeight = FontWeight(600),
+                    color = Color(0xFF04385F),
+                )
 
-        )
+            )
+        }
     }
 }
 
 @Composable
 fun PatientContainer(){
-    Column (
-        modifier = Modifier
-            .width(291.dp)
-            .height(135.dp)
-            .background(color = Color(0xE5E4FCFF)),
+    InfoContainer{
+        Column(
+            modifier = Modifier
+                .background(color = Color(0xE5E4FCFF))
+                .padding(8.dp)
+                .sizeIn(minHeight = 50.dp),
             verticalArrangement = Arrangement.Center
 
-    ){
-        Row (){
-            Text(
-                text = stringResource(R.string.patient_title)             )
-            Text(
-                text = stringResource(R.string.dummy_text_short)
-            )
-        }
-        Row (){
-            Text(
-                text = stringResource(R.string.patient_room_title)            )
-            Text(
-                text = stringResource(R.string.dummy_text_short)
-            )
-        }
-        Button(
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color(0xFF2D6C9B)),
-            shape = RoundedCornerShape(size = 10.dp)
-
         ) {
-            Text(
-                text = stringResource(id = R.string.patient_details)
-            )
+            Row{
+                Text(
+                    text = stringResource(R.string.patient_title),
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFF04385F),
+                        textDecoration = TextDecoration.Underline,
+                    )
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = stringResource(R.string.dummy_text_short),
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF04385F),
+                        )
+                )
+            }
+            Row {
+                Text(
+                    text = stringResource(R.string.patient_room_title),
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFF04385F),
+                        textDecoration = TextDecoration.Underline,
+                    )
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = stringResource(R.string.dummy_text_short),
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF04385F),
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
+                shape = RoundedCornerShape(size = 10.dp),
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 5.dp)
+                    .align(Alignment.CenterHorizontally)
+
+            ) {
+                Text(
+                    text = stringResource(id = R.string.patient_details),
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                    )
+                )
+            }
         }
     }
-
 }
 
 @Composable
 fun TestContainer(){
-    Column (
-        modifier = Modifier
-            .width(291.dp)
-            .height(135.dp)
-            .background(color = Color(0xE5E4FCFF)),
-        verticalArrangement = Arrangement.Center
-    ){
-        Row {
-            Text(
-                text = stringResource(id = R.string.tests)
-            )
-            Text(
-                text = stringResource(R.string.dummy_text)
-            )
-        }
-        Button(
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(Color(0xFF2D6C9B)),
-            shape = RoundedCornerShape(size = 10.dp)
-        )  {
-            Text(
-                text = stringResource(R.string.tests_details)
-            )
+    InfoContainer{
+        Column(
+            modifier = Modifier
+                .background(color = Color(0xE5E4FCFF))
+                .padding(8.dp)
+                .sizeIn(minHeight = 80.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row {
+                Text(
+                    text = stringResource(id = R.string.tests),
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFF04385F),
+                        textDecoration = TextDecoration.Underline,
+                    )
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = stringResource(R.string.dummy_text),
+                    style = TextStyle(
+                    fontSize = 17.sp,
+                    fontFamily = FontFamily(Font(R.font.fonts)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF04385F),
+                 )
+                )
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
+                shape = RoundedCornerShape(size = 10.dp),
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 5.dp)
+                    .align(Alignment.CenterHorizontally)
+
+            ) {
+                Text(
+                    text = stringResource(id = R.string.required_tests),
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFFFFFFFF),
+                        textAlign = TextAlign.Center,
+                    )
+                )
+            }
         }
     }
 }
 
-
-@Preview(showBackground = true)
 @Composable
-fun TaskDetailsPreview() {
-    TaskPage()
+fun InfoContainer(content: @Composable () -> Unit) {
+    Surface(modifier = Modifier
+        .padding(horizontal = 12.dp, vertical = 5.dp)
+        .fillMaxWidth(),
+        color = colorResource(id = R.color.info_container_bg).copy(alpha = 0.9f),
+        content = content)
 }
+
