@@ -12,5 +12,5 @@ interface BackendService {
     @POST("authenticate")
     suspend fun login(
         @Body loginRequest: LoginRequest
-    ): Response<LoginResponse>
+    ): Response<ApiResponse<LoginResponse>>
 }
