@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.docdash.R
-import com.example.docdash.data.LoginRequest
+import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.databinding.ActivityLoginBinding
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 
