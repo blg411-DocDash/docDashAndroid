@@ -67,15 +67,29 @@
 
     <TextView
         android:id="@+id/textViewPageName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/app_dark_blue"
+        android:gravity="center"
         android:text="@string/task_pool"
-        android:textColor="@color/app_dark_blue"
+        android:textAlignment="center"
+        android:textColor="@color/white"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/profileButton"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/profile"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/textViewPageName"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="_" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
