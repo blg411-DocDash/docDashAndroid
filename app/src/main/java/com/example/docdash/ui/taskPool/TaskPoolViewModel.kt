@@ -19,11 +19,8 @@ class TaskPoolViewModel : ViewModel() {
 
     private suspend fun makeTaskPoolRequest() {
         try {
-
-
             val request = BackendAPI.backendAPI.getAvailableTasks(status = "open", nurse = null)
             val response = request.body()
-            Log.d("xxx", request.toString())
             if (request.isSuccessful) {
                 var responseItems = listOf<TaskListItem>()
                 for (item in response!!) {
