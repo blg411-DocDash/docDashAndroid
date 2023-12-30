@@ -20,18 +20,19 @@ class TaskPoolViewModel : ViewModel() {
     private suspend fun makeTaskPoolRequest() {
         try {
             val request = BackendAPI.backendAPI.getAvailableTasks(status = "open", nurse = null)
-            val response = request.body()
-            if (request.isSuccessful) {
+            if (request.body()?.code == 0) {
                 var responseItems = listOf<TaskListItem>()
-                for (item in response!!) {
-                    responseItems += TaskListItem(
-                        item.id ?: "",
-                        item.information ?: "",
-                        item.deadline.toString() ?: "",
-                        item.status ?: "",
-                        "",
-                        "ep",
-                        ""
+                for (item in request.body()?.data!!) {
+                    responseItems = responseItems.plus(
+                        TaskListItem(
+                            item.id ?: "",
+                            item.information ?: "",
+                            item.deadline.toString() ?: "",
+                            item.status ?: "",
+                            "-not implemented-",
+                            "-not implemented-",
+                            "-not implemented-",
+                        )
                     )
                 }
                 taskList.postValue(responseItems)
@@ -39,9 +40,8 @@ class TaskPoolViewModel : ViewModel() {
                 errorMessage.postValue("Failed to get tasks due to invalid credentials.")
             }
         } catch (e: Exception) {
+            Log.d("XXX", e.toString())
             errorMessage.postValue("Failed to get tasks due to network error.")
-        } finally {
-            return
         }
     }
 }

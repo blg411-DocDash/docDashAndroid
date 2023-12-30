@@ -14,7 +14,7 @@ class LoginViewModel : ViewModel() {
         MutableLiveData<String>()
     }
     val loginStatus: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
+        MutableLiveData<Boolean>(false)
     }
 
     fun login(loginRequest: LoginRequest) {
@@ -36,7 +36,7 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) { makeLoginRequest(loginRequest, loginMessage, loginStatus) }
         return
     }
-
+    
     companion object {
         suspend fun makeLoginRequest(loginRequest: LoginRequest, loginError : MutableLiveData<String>, loginStatus : MutableLiveData<Boolean>) {
             try {

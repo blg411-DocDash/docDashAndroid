@@ -1,5 +1,6 @@
 package com.example.docdash.services
 
+import android.content.SharedPreferences
 import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.data.serviceData.response.LoginResponse
 import com.example.docdash.data.serviceData.response.TasksGetResponse
@@ -12,6 +13,7 @@ import retrofit2.http.Query
 
 
 interface BackendService {
+
     @POST("authenticate")
     suspend fun login(
         @Body loginRequest: LoginRequest
@@ -21,6 +23,6 @@ interface BackendService {
     suspend fun getAvailableTasks(
         @Query("status") status : String?,
         @Query("nurse") nurse : String?,
-        @Header ("Authorization") bearerToken : String = ApiConstants.TOKEN
-    ): Response<List<TasksGetResponse>>
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<Array<TasksGetResponse>>>
 }
