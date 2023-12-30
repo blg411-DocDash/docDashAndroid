@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.docdash.data.TaskListItem
 import com.example.docdash.services.BackendAPI
+import com.example.docdash.utils.DateTimeHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 class TaskPoolViewModel : ViewModel() {
     val taskList = MutableLiveData<List<TaskListItem>>()
@@ -22,12 +24,14 @@ class TaskPoolViewModel : ViewModel() {
             val request = BackendAPI.backendAPI.getAvailableTasks(status = "open", nurse = null)
             if (request.body()?.code == 0) {
                 var responseItems = listOf<TaskListItem>()
-                for (item in request.body()?.data!!) {
+                val requestData = request.body()?.data!!
+                requestData.sortBy { it.deadline }
+                for (item in requestData) {
                     responseItems = responseItems.plus(
                         TaskListItem(
                             item.id ?: "",
                             item.information ?: "",
-                            item.deadline.toString() ?: "",
+                            DateTimeHandler.epochSecondsToDateTime(item.deadline ?: 0.0),
                             item.status ?: "",
                             "-not implemented-",
                             "-not implemented-",
