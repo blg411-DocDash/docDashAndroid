@@ -27,6 +27,24 @@ class TaskPoolViewModel : ViewModel() {
                 val requestData = request.body()?.data!!
                 requestData.sortBy { it.deadline }
                 for (item in requestData) {
+                    val entryID = item.entry_id ?: ""
+                    val entryRequest = BackendAPI.backendAPI.getPatientEntry(entryID)
+                    lateinit var  room: String
+                    lateinit var patientTCKN: String
+
+                    if(entryRequest.body()?.code == 0)
+                        entryRequest.body()!!.data!![0].let { entry ->
+                            room = entry.room ?: ""
+                            patientTCKN = entry.tckn ?: ""
+                        }
+
+                    val patientRequest = BackendAPI.backendAPI.getPatient(patientTCKN)
+                    lateinit var patientName: String
+                    if(patientRequest.body()?.code == 0)
+                        patientRequest.body()!!.data!!.let { patient ->
+                            patientName = patient.name ?: ""
+                        }
+
                     responseItems = responseItems.plus(
                         TaskListItem(
                             item.id ?: "",
@@ -34,8 +52,8 @@ class TaskPoolViewModel : ViewModel() {
                             DateTimeHandler.epochSecondsToDateTime(item.deadline ?: 0.0),
                             item.status ?: "",
                             "-not implemented-",
-                            "-not implemented-",
-                            "-not implemented-",
+                            patientName,
+                            room,
                         )
                     )
                 }

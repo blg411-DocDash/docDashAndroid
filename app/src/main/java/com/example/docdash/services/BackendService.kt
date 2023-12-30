@@ -1,8 +1,9 @@
 package com.example.docdash.services
 
-import android.content.SharedPreferences
 import com.example.docdash.data.serviceData.requests.LoginRequest
+import com.example.docdash.data.serviceData.response.EntryGetResponse
 import com.example.docdash.data.serviceData.response.LoginResponse
+import com.example.docdash.data.serviceData.response.PatientGetResponse
 import com.example.docdash.data.serviceData.response.TasksGetResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -25,4 +26,16 @@ interface BackendService {
         @Query("nurse") nurse : String?,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
     ): Response<ApiResponse<Array<TasksGetResponse>>>
+
+    @GET("entries")
+    suspend fun getPatientEntry(
+        @Query("entry_id") entryID : String?,
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<Array<EntryGetResponse>>>
+
+    @GET("patients")
+    suspend fun getPatient(
+        @Query("tckn") tckn : String?,
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<PatientGetResponse>>
 }
