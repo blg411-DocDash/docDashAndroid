@@ -3,7 +3,7 @@ package com.example.docdash.ui.login
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.docdash.data.LoginRequest
+import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.services.ApiConstants
 import com.example.docdash.services.BackendAPI
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +14,7 @@ class LoginViewModel : ViewModel() {
         MutableLiveData<String>()
     }
     val loginStatus: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
+        MutableLiveData<Boolean>(false)
     }
 
     fun login(loginRequest: LoginRequest) {
@@ -33,12 +33,12 @@ class LoginViewModel : ViewModel() {
             loginStatus.postValue(false)
             return
         }
-        viewModelScope.launch(Dispatchers.IO) { loginRequestHandler(loginRequest, loginMessage, loginStatus) }
+        viewModelScope.launch(Dispatchers.IO) { makeLoginRequest(loginRequest, loginMessage, loginStatus) }
         return
     }
-
+    
     companion object {
-        suspend fun loginRequestHandler(loginRequest: LoginRequest, loginError : MutableLiveData<String>, loginStatus : MutableLiveData<Boolean>) {
+        suspend fun makeLoginRequest(loginRequest: LoginRequest, loginError : MutableLiveData<String>, loginStatus : MutableLiveData<Boolean>) {
             try {
                 val request = BackendAPI.backendAPI.login(loginRequest)
                 if(request.body()?.code == 0)

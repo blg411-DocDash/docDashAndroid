@@ -1,4 +1,4 @@
-package com.example.docdash.data
+package com.example.docdash.data.serviceData.response
 
 data class LoginResponse(
     var token: String?,

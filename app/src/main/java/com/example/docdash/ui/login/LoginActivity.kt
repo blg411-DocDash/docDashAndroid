@@ -6,8 +6,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.docdash.R
-import com.example.docdash.data.LoginRequest
+import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.databinding.ActivityLoginBinding
+import com.example.docdash.services.ApiConstants
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -26,6 +27,15 @@ class LoginActivity : AppCompatActivity() {
         val passwordEditText = binding.editTextPassword
         val loginButton = binding.buttonLogin
 
+        val redirectPage = Intent(this, TaskPoolActivity::class.java)
+        redirectPage.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        if(ApiConstants.isLoggedIn())
+        {
+            startActivity(redirectPage)
+        }
+
+
         loginButton.setOnClickListener {
             val userEmail = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -37,13 +47,11 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginStatus.observe(this) { loginSuccess ->
             if (loginSuccess) {
                 showLoginMessage(this, "Login Success")
-                val redirectPage = Intent(this, TaskPoolActivity::class.java)
                 startActivity(redirectPage)
             } else {
                 showLoginMessage(this, viewModel.loginMessage.value.toString())
             }
         }
-
     }
 
     companion object {

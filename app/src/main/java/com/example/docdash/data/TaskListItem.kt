@@ -1,7 +1,7 @@
 package com.example.docdash.data
 
 data class TaskListItem(
-    var taskID: Int?,
+    var taskID: String?,
     var taskDescription: String?,
     var taskDeadline: String?,
     var taskStatus: String?,

@@ -9,7 +9,6 @@ import com.example.docdash.R
 import com.example.docdash.data.TaskListItem
 
 class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val taskID: TextView = view.findViewById(R.id.taskNo)
     val dueDate: TextView = view.findViewById(R.id.taskDue)
     val taskDescription: TextView = view.findViewById(R.id.taskDescription)
     val testDescription: TextView = view.findViewById(R.id.testDescription)
@@ -30,7 +29,6 @@ class TaskAdapter(private var taskList: List<TaskListItem>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Bind data to views
-        holder.taskID.text = taskList[position].taskID.toString()
         holder.dueDate.text = taskList[position].taskDeadline
         holder.taskDescription.text = taskList[position].taskDescription
         holder.testDescription.text = taskList[position].testDescription
