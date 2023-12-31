@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Arrangement
@@ -37,10 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.docdash.R
+import com.example.docdash.data.TaskListItem
 
-@Preview
 @Composable
-fun TaskDetails() {
+fun TaskDetails(task: TaskListItem?) {
+    // If the taskGetResponse is null, then we will use default text values,
+    // otherwise we will use the values from the taskGetResponse.
     Column(
         modifier = Modifier
             .background(color = colorResource(R.color.background))
@@ -53,7 +54,13 @@ fun TaskDetails() {
                 .fillMaxSize()
         ) {
             HeaderRow()
-            TaskContainer()
+            // If the taskGetResponse is null, then we will use default text values
+            // otherwise we will use the values from the taskGetResponse.
+            if (task != null) {
+                TaskContainer(task)
+            } else {
+                TaskContainer(null)
+            }
         }
         Row(
             modifier = Modifier
@@ -124,7 +131,7 @@ fun HeaderRow() {
     }
 }
 @Composable
-fun TaskContainer(){
+fun TaskContainer(task: TaskListItem?) {
     val style = TextStyle(
         fontSize = 25.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -149,20 +156,24 @@ fun TaskContainer(){
                 style = style
             )
             Text(
-                text = stringResource(R.string.dummy_number),
+                text = task?.taskID ?: "0",
                 style = style
             )
         }
-        TaskDescription()
-        PatientContainer()
-        TestContainer()
+        TaskDescription(task?.taskDescription!!)
+        PatientContainer(task.patient!!, task.room!!)
+        TestContainer(task.testDescription!!)
         Button(
             onClick = { /*TODO*/ },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green)),
             shape = RoundedCornerShape(size = 10.dp),
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 30.dp)
-                .shadow(elevation = 15.dp, spotColor = Color(0x80000000), ambientColor = Color(0x80000000))
+                .shadow(
+                    elevation = 15.dp,
+                    spotColor = Color(0x80000000),
+                    ambientColor = Color(0x80000000)
+                )
         ) {
             Text(
                 text = stringResource(id = R.string.take_task),
@@ -179,7 +190,7 @@ fun TaskContainer(){
 }
 
 @Composable
-fun TaskDescription(){
+fun TaskDescription(taskDescription: String){
     InfoContainer{
         Column(
             modifier = Modifier
@@ -188,7 +199,7 @@ fun TaskDescription(){
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = stringResource(R.string.dummy_text_very_long),
+                text = taskDescription,
                 style = TextStyle(
                     fontSize = 15.sp,
                     fontFamily = FontFamily(Font(R.font.fonts)),
@@ -202,7 +213,7 @@ fun TaskDescription(){
 }
 
 @Composable
-fun PatientContainer(){
+fun PatientContainer(patient: String, room: String){
     InfoContainer{
         Column(
             modifier = Modifier
@@ -225,7 +236,7 @@ fun PatientContainer(){
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = stringResource(R.string.dummy_text_short),
+                    text = patient,
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -247,7 +258,7 @@ fun PatientContainer(){
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = stringResource(R.string.dummy_text_short),
+                    text = room,
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -282,7 +293,7 @@ fun PatientContainer(){
 }
 
 @Composable
-fun TestContainer(){
+fun TestContainer(testDescription: String){
     InfoContainer{
         Column(
             modifier = Modifier
@@ -304,7 +315,7 @@ fun TestContainer(){
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = stringResource(R.string.dummy_text),
+                    text = testDescription,
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),

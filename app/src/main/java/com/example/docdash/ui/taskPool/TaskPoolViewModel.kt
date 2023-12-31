@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.docdash.data.TaskListItem
+import com.example.docdash.data.TestItem
 import com.example.docdash.services.BackendAPI
 import com.example.docdash.utils.DateTimeHandler
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +55,9 @@ class TaskPoolViewModel : ViewModel() {
                             "-not implemented-",
                             patientName,
                             room,
+                            entryID,
+                            patientTCKN,
+                            emptyList()
                         )
                     )
                 }
