@@ -49,7 +49,8 @@ class LoginActivity : AppCompatActivity() {
                 showLoginMessage(this, "Login Success")
                 startActivity(redirectPage)
             } else {
-                showLoginMessage(this, viewModel.loginMessage.value.toString())
+                if(!viewModel.loginMessage.value.isNullOrEmpty())
+                    showLoginMessage(this, viewModel.loginMessage.value.toString())
             }
         }
     }

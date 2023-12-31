@@ -46,6 +46,7 @@ class LoginViewModel : ViewModel() {
                     ApiConstants.TOKEN= request.body()?.data?.token.toString()
                     ApiConstants.ROLE= request.body()?.data?.role.toString()
                     ApiConstants.NAME= request.body()?.data?.name.toString()
+                    ApiConstants.EMAIL= loginRequest.email.toString()
                     loginError.postValue("Login Success")
                     loginStatus.postValue(true)
                 }
