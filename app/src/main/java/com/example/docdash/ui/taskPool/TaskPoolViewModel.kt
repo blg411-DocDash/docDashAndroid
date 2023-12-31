@@ -46,18 +46,39 @@ class TaskPoolViewModel : ViewModel() {
                             patientName = patient.name ?: ""
                         }
 
+                    // Now, we need to get the tests
+                    var tests = listOf<TestItem>()
+                    var testDescription = ""
+                    val testRequest = BackendAPI.backendAPI.getTaskTests(patientTCKN, item.id)
+                    if(testRequest.body()?.code == 0 && testRequest.body()?.data != null)
+                        testRequest.body()!!.data!!.let { testList ->
+                            for(test in testList) {
+                                tests = tests.plus(
+                                    TestItem(
+                                        testID = test.id ?: "",
+                                        taskID = test.task_id ?: "",
+                                        patientID = patientTCKN,
+                                        testDescription = test.information ?: "",
+                                        testStatus = test.status ?: "",
+                                        result = ""
+                                    )
+                                )
+                                testDescription += test.information + "\n"
+                            }
+                        }
+
                     responseItems = responseItems.plus(
                         TaskListItem(
                             item.id ?: "",
                             item.information ?: "",
                             DateTimeHandler.epochSecondsToDateTime(item.deadline ?: 0.0),
                             item.status ?: "",
-                            "-not implemented-",
+                            testDescription,
                             patientName,
                             room,
                             entryID,
                             patientTCKN,
-                            emptyList()
+                            tests
                         )
                     )
                 }

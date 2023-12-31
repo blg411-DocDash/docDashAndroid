@@ -5,6 +5,7 @@ object ApiConstants {
     var TOKEN: String = ""
     var ROLE: String = ""
     var NAME: String = ""
+    var EMAIL: String = ""
 
     fun reset() {
         TOKEN = ""

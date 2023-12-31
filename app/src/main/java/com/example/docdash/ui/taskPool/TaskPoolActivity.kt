@@ -2,7 +2,6 @@ package com.example.docdash.ui.taskPool
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.docdash.R
 import com.example.docdash.databinding.ActivityTaskPoolBinding
+import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 
 class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
@@ -37,7 +37,11 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
 
-        // viewModel.updateTaskList()
+        // These are the bottom navigation bar buttons
+        binding.buttonMyTasks.setOnClickListener {
+            val myTasksPage = Intent(this, MyTasksAcitivity::class.java)
+            startActivity(myTasksPage)
+        }
     }
 
     override fun onStart() {

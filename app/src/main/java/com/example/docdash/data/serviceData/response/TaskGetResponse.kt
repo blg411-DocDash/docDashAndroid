@@ -8,5 +8,5 @@ data class TaskGetResponse(
     var deadline: Double?,
     var entry_id: String?,
     var id : String?,
-    var tests : List<TaskTestResponse>?
+    var tests : List<TestResponse>?
 )
