@@ -15,6 +15,10 @@
         android:theme="@style/Theme.DocDash"
         tools:targetApi="31">
         <activity
+            android:name=".ui.taskDetails.TaskDetailsActivity"
+            android:label="@string/task_details"
+            android:exported="false" />
+        <activity
             android:name=".ui.patientDetails.PatientDetailsActivity"
             android:label="@string/patient_details"
             android:exported="false">
@@ -23,10 +27,6 @@
             android:name=".ui.taskPool.TaskPoolActivity"
             android:theme="@style/Theme.DocDash.Layout"
             android:exported="false" />
-        <activity
-            android:name=".DummyActivity"
-            android:exported="false"
-            android:theme="@style/Theme.DocDash.Layout" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
