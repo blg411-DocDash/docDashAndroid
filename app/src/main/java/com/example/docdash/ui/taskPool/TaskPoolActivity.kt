@@ -11,6 +11,7 @@ import com.example.docdash.R
 import com.example.docdash.databinding.ActivityTaskPoolBinding
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+import com.google.gson.Gson
 
 class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
     private val viewModel: TaskPoolViewModel by viewModels()
@@ -50,8 +51,14 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
     }
 
     override fun onClickTask(position: Int) {
+        // Intent is required to start another activity
         val taskDetailsPage = Intent(this, TaskDetailsActivity::class.java)
-        taskDetailsPage.putExtra("taskID", viewModel.taskList.value?.get(position)?.taskID)
+        // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+        val gson = Gson()
+        gson.toJson(viewModel.taskList.value?.get(position))?.let {
+            taskDetailsPage.putExtra("taskDetails", it)
+        }
+        taskDetailsPage.putExtra("taskID", viewModel.taskList.value?.get(position)?.id)
         startActivity(taskDetailsPage)
     }
 }

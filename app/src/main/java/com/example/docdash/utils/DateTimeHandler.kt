@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter
 
 class DateTimeHandler {
     companion object {
-        fun epochSecondsToDateTime(epochSeconds: Double): String {
-            val instant = Instant.ofEpochSecond(epochSeconds.toLong())
+        fun epochSecondsToDateTime(epochSeconds: Long): String {
+            val instant = Instant.ofEpochSecond(epochSeconds)
             val dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
 
             // Format the LocalDateTime using a DateTimeFormatter
@@ -16,5 +16,4 @@ class DateTimeHandler {
             return dateTime.format(formatter)
         }
     }
-
 }
