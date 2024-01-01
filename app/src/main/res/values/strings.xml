@@ -24,6 +24,8 @@
     <string name="tests">Tests</string>
     <string name="complete_task">Complete Task</string>
     <string name="task_completed">Task Completed</string>
+    <string name="active_tasks">Active Tasks</string>
+    <string name="completed_tasks">Completed Tasks</string>
 
     <string name="back_to_task_details">Back to Task Details</string>
 

@@ -1,5 +1,10 @@
 package com.example.docdash.ui.taskDetails
 
+import android.content.Intent
+import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +32,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -37,9 +43,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
+import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 @Composable
 fun TaskDetails(task: TaskGetResponse) {
+    // This is the context of the activity
+    val context = LocalContext.current
+
+    // Intents to launch task pool and my tasks activities
+    val taskPoolIntent = Intent(context, TaskPoolActivity::class.java)
+    val myTasksIntent = Intent(context, TaskPoolActivity::class.java)
+
+    // This is the activity result launcher for starting the activity for result.
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result -> }
+
+
     // If the taskGetResponse is null, then we will use default text values,
     // otherwise we will use the values from the taskGetResponse.
     Column(
@@ -63,7 +83,9 @@ fun TaskDetails(task: TaskGetResponse) {
 
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          startActivity.launch(taskPoolIntent)
+                },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             ) {
@@ -81,7 +103,9 @@ fun TaskDetails(task: TaskGetResponse) {
 
             Spacer(modifier = Modifier.width(12.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                            startActivity.launch(myTasksIntent)
+                },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             ) {
