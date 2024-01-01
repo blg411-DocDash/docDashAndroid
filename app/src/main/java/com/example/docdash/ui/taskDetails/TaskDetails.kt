@@ -1,5 +1,10 @@
 package com.example.docdash.ui.taskDetails
 
+import android.content.Intent
+import android.content.Context
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +32,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -36,10 +42,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.docdash.R
-import com.example.docdash.data.TaskListItem
+import com.example.docdash.data.serviceData.response.TaskGetResponse
+import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 @Composable
-fun TaskDetails(task: TaskListItem?) {
+fun TaskDetails(task: TaskGetResponse) {
+    // This is the context of the activity
+    val context = LocalContext.current
+
+    // Intents to launch task pool and my tasks activities
+    val taskPoolIntent = Intent(context, TaskPoolActivity::class.java)
+    val myTasksIntent = Intent(context, TaskPoolActivity::class.java)
+
+    // This is the activity result launcher for starting the activity for result.
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result -> }
+
+
     // If the taskGetResponse is null, then we will use default text values,
     // otherwise we will use the values from the taskGetResponse.
     Column(
@@ -54,13 +74,7 @@ fun TaskDetails(task: TaskListItem?) {
                 .fillMaxSize()
         ) {
             HeaderRow()
-            // If the taskGetResponse is null, then we will use default text values
-            // otherwise we will use the values from the taskGetResponse.
-            if (task != null) {
-                TaskContainer(task)
-            } else {
-                TaskContainer(null)
-            }
+            TaskContainer(task)
         }
         Row(
             modifier = Modifier
@@ -69,7 +83,9 @@ fun TaskDetails(task: TaskListItem?) {
 
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          startActivity.launch(taskPoolIntent)
+                },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             ) {
@@ -87,7 +103,9 @@ fun TaskDetails(task: TaskListItem?) {
 
             Spacer(modifier = Modifier.width(12.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                            startActivity.launch(myTasksIntent)
+                },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             ) {
@@ -131,7 +149,7 @@ fun HeaderRow() {
     }
 }
 @Composable
-fun TaskContainer(task: TaskListItem?) {
+fun TaskContainer(task: TaskGetResponse) {
     val style = TextStyle(
         fontSize = 25.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -156,15 +174,26 @@ fun TaskContainer(task: TaskListItem?) {
                 style = style
             )
             Text(
-                text = task?.taskID ?: "0",
+                text = task.id ?: "0",
                 style = style
             )
         }
-        TaskDescription(task?.taskDescription!!)
-        PatientContainer(task.patient!!, task.room!!)
-        TestContainer(task.testDescription!!)
+        TaskDescription(task.information ?: "N/A")
+        PatientContainer(task.patient?.name ?: "N/A", task.entry?.room ?: "N/A")
+
+        // Create a string from the tests
+        val testText: String = if (task.tests?.isNotEmpty() == true) {
+            task.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
+        } else {
+            "N/A"
+        }
+
+        TestContainer(testText)
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                      // TODO
+
+            },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green)),
             shape = RoundedCornerShape(size = 10.dp),
             modifier = Modifier
@@ -176,7 +205,14 @@ fun TaskContainer(task: TaskListItem?) {
                 )
         ) {
             Text(
-                text = stringResource(id = R.string.take_task),
+                // Take Task / Complete Task / Task Completed button is generated based on the task status
+                text = if (task.status == "open") {
+                    stringResource(id = R.string.take_task)
+                } else if (task.status == "in progress") {
+                    stringResource(id = R.string.complete_task)
+                } else {
+                    stringResource(id = R.string.task_completed)
+                },
                 style = TextStyle(
                     fontSize = 30.sp,
                     fontFamily = FontFamily(Font(R.font.fonts)),

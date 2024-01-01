@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.docdash.R
-import com.example.docdash.data.TaskListItem
+import com.example.docdash.data.serviceData.response.TaskGetResponse
+import com.example.docdash.utils.DateTimeHandler
 
 class ViewHolder(view: View, recyclerViewInterface: TaskPoolInterface) : RecyclerView.ViewHolder(view) {
     val dueDate: TextView = view.findViewById(R.id.taskDue)
@@ -25,7 +26,7 @@ class ViewHolder(view: View, recyclerViewInterface: TaskPoolInterface) : Recycle
 }
 
 class TaskAdapter(
-    private var taskList: List<TaskListItem>,
+    private var taskList: List<TaskGetResponse>,
     recyclerViewInterface: TaskPoolInterface
 ) : RecyclerView.Adapter<ViewHolder>() {
 
@@ -43,16 +44,21 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Bind data to views
-        holder.dueDate.text = taskList[position].taskDeadline
-        holder.taskDescription.text = taskList[position].taskDescription
-        holder.testDescription.text = taskList[position].testDescription
-        holder.patient.text = taskList[position].patient
-        holder.room.text = taskList[position].room
+        val taskItem = taskList[position]
+        holder.dueDate.text = DateTimeHandler.epochSecondsToDateTime(taskItem.deadline?:0 )
+        holder.taskDescription.text = taskItem.information ?: "N/A"
+        val testText: String = if (taskItem.tests?.isNotEmpty() == true) {
+            taskItem.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
+        } else {
+            "N/A"
+        }
+        holder.testDescription.text = testText
+        holder.patient.text = taskItem.patient?.name ?: "N/A"
+        holder.room.text = taskItem.entry?.room ?: "N/A"
     }
 
-    fun updateTaskList(newTaskList: List<TaskListItem>) {
+    fun updateTaskList(newTaskList: List<TaskGetResponse>) {
         this.taskList = newTaskList
-        // TODO Check alternatives to notifyDataSetChanged()
         notifyDataSetChanged()
     }
 }

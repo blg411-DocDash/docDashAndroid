@@ -5,7 +5,7 @@ import com.example.docdash.data.serviceData.response.EntryGetResponse
 import com.example.docdash.data.serviceData.response.LoginResponse
 import com.example.docdash.data.serviceData.response.PatientGetResponse
 import com.example.docdash.data.serviceData.response.TaskGetResponse
-import com.example.docdash.data.serviceData.response.TasksGetResponse
+import com.example.docdash.data.serviceData.response.TestGetResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -22,11 +22,11 @@ interface BackendService {
     ): Response<ApiResponse<LoginResponse>>
 
     @GET("tasks")
-    suspend fun getAvailableTasks(
+    suspend fun getTasks(
         @Query("status") status : String?,
-        @Query("nurse") nurse : String?,
+        @Query("nurse_email") nurse : String?,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
-    ): Response<ApiResponse<Array<TasksGetResponse>>>
+    ): Response<ApiResponse<Array<TaskGetResponse>>>
 
     @GET("tasks")
     suspend fun getTask(
@@ -35,7 +35,7 @@ interface BackendService {
     ): Response<ApiResponse<TaskGetResponse>>
 
     @GET("entries")
-    suspend fun getPatientEntry(
+    suspend fun gettEntry(
         @Query("entry_id") entryID : String?,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
     ): Response<ApiResponse<Array<EntryGetResponse>>>
@@ -45,4 +45,11 @@ interface BackendService {
         @Query("tckn") tckn : String?,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
     ): Response<ApiResponse<PatientGetResponse>>
+
+    @GET("tests")
+    suspend fun getTest(
+        @Query("tckn") tckn : String?,
+        @Query("task_id") taskID : String?,
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<Array<TestGetResponse>>>
 }

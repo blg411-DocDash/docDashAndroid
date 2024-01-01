@@ -1,8 +1,10 @@
 package com.example.docdash.data
 
 data class TestItem(
-    var testID: Int,
-    var taskID: Int,
-    var patientID: Int,
-    var testDescription: String,
+    var testID: String?,
+    var taskID: String?,
+    var patientID: String?,
+    var testDescription: String?,
+    var testStatus: String?,
+    var result: String?
 )
