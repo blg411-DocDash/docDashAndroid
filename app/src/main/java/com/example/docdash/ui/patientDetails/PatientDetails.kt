@@ -250,12 +250,14 @@ fun OuterContainer() {
         val tempTestDates = listOf(
             "04.12.2023",
             "03.12.2023",
-            "03.12.2023"
+            "03.12.2023",
+            "02.12.2023"
         )
         val testResultsPerDate = mapOf(
             "04.12.2023" to listOf("CRP", "Whole Blood Count"),
             "03.12.2023" to listOf("Blood Pressure", "Temperature"),
-            "03.12.2023" to listOf("Blood Pressure", "Temperature"),
+            "03.12.2023" to listOf("CRP", "Whole Blood Count"),
+            "02.12.2023" to listOf("Blood Pressure", "Temperature"),
         )
         InfoContainer {
             Column(modifier = Modifier

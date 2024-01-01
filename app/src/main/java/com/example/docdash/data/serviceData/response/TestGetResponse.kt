@@ -3,6 +3,7 @@ package com.example.docdash.data.serviceData.response
 data class TestGetResponse(
     // This class holds the response of the test data.
     val task_id: String?,
+    val name: String?,
     val information: String?,
     val created_at: Long?,
     val created_by: String?,
