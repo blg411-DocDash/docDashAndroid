@@ -2,5 +2,5 @@
 <resources>
 
     <style name="Theme.DocDash" parent="android:Theme.Material.Light.NoActionBar" />
-    <style name="Theme.DocDash.Layout" parent="Theme.AppCompat.Light.NoActionBar" />
+        <style name="Theme.DocDash.Layout" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>

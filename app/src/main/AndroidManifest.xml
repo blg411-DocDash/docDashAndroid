@@ -15,16 +15,19 @@
         android:theme="@style/Theme.DocDash"
         tools:targetApi="31">
         <activity
+            android:name=".ui.myTasks.MyTasksAcitivity"
+            android:exported="false"
+            android:theme="@style/Theme.DocDash.Layout" />
+        <activity
+            android:name=".ui.taskDetails.TaskDetailsActivity"
+            android:exported="false"
+            android:label="@string/task_details" />
+        <activity
             android:name=".ui.patientDetails.PatientDetailsActivity"
-            android:label="@string/patient_details"
-            android:exported="false">
-        </activity>
+            android:exported="false"
+            android:label="@string/patient_details" />
         <activity
             android:name=".ui.taskPool.TaskPoolActivity"
-            android:theme="@style/Theme.DocDash.Layout"
-            android:exported="false" />
-        <activity
-            android:name=".DummyActivity"
             android:exported="false"
             android:theme="@style/Theme.DocDash.Layout" />
         <activity
@@ -33,7 +36,6 @@
             android:theme="@style/Theme.DocDash.Layout">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
