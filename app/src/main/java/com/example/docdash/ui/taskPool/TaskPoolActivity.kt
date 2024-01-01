@@ -50,7 +50,7 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
             viewModel.updateTaskList()
         }
 
-        // Update the task list when the activity is created, not resored
+        // Update the task list when the activity is created, not restored
         if (savedInstanceState == null)
         {
             viewModel.updateTaskList()

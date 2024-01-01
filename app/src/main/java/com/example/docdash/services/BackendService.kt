@@ -1,16 +1,19 @@
 package com.example.docdash.services
 
 import com.example.docdash.data.serviceData.requests.LoginRequest
+import com.example.docdash.data.serviceData.requests.TaskUpdateRequest
 import com.example.docdash.data.serviceData.response.EntryGetResponse
 import com.example.docdash.data.serviceData.response.LoginResponse
 import com.example.docdash.data.serviceData.response.PatientGetResponse
 import com.example.docdash.data.serviceData.response.TaskGetResponse
+import com.example.docdash.data.serviceData.response.TaskUpdateResponse
 import com.example.docdash.data.serviceData.response.TestGetResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 
@@ -33,6 +36,12 @@ interface BackendService {
         @Query("id") id : String?,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
     ): Response<ApiResponse<TaskGetResponse>>
+
+    @PUT("tasks")
+    suspend fun updateTask(
+        @Body taskUpdateRequest: TaskUpdateRequest,
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<TaskUpdateResponse>>
 
     @GET("entries")
     suspend fun gettEntry(

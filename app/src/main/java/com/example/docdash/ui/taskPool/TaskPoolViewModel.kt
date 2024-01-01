@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.docdash.data.TestItem
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.services.BackendAPI
-import com.example.docdash.utils.DateTimeHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

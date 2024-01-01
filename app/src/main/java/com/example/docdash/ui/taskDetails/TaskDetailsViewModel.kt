@@ -2,24 +2,27 @@ package com.example.docdash.ui.taskDetails
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.docdash.data.serviceData.requests.TaskUpdateRequest
 import com.example.docdash.data.serviceData.response.TaskGetResponse
-import com.example.docdash.utils.DateTimeHandler
 import com.example.docdash.services.BackendAPI
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TaskDetailsViewModel : ViewModel() {
     // This is the data that we will fetch asynchronously
     // A listener from the activity will be notified when
     // the data is available.
     val taskDetailsLiveData = MutableLiveData<TaskGetResponse>()
-    val errorMessage = MutableLiveData<String>()
+    private val errorMessage = MutableLiveData<String>()
     suspend fun getTaskDetails(taskID: String) {
-        // Suspend functions work in the backgruond thread
+        // Suspend functions work in the background thread
         // and do not block the main thread, this is required
         // for a responsive UI.
         // This function will be called from the UI layer.
         try {
-            // Call the bakend API, this is a suspend function
+            // Call the backend API, this is a suspend function
             // so it will not block the main thread while doing
             // network operations.
             val request = BackendAPI.backendAPI.getTask(taskID)
@@ -36,8 +39,56 @@ class TaskDetailsViewModel : ViewModel() {
         }
     }
 
-    suspend fun takeTask(taskID: String){
+    fun takeTask(){
+        viewModelScope.launch(Dispatchers.IO) {
+            makeTakeTaskRequest()
+        }
+    }
 
+    fun completeTask(){
+        viewModelScope.launch(Dispatchers.IO) {
+            makeCompleteTaskRequest()
+        }
+    }
+
+    private suspend fun makeTakeTaskRequest(){
+        try {
+            val request = BackendAPI.backendAPI.updateTask(TaskUpdateRequest(
+                taskDetailsLiveData.value?.id,
+                "in progress",
+                ))
+            if (request.body()?.code == 0) {
+                // When the data is ready, notify the UI layer
+                taskDetailsLiveData.value?.status = "in progress"
+                taskDetailsLiveData.postValue(taskDetailsLiveData.value)
+            } else {
+                // Error handling
+                errorMessage.postValue("Failed, unable to take task!")
+            }
+        } catch (e: Exception) {
+            // Exception handling
+            errorMessage.postValue("Network Error!")
+        }
+    }
+
+    private suspend fun makeCompleteTaskRequest(){
+        try {
+            val request = BackendAPI.backendAPI.updateTask(TaskUpdateRequest(
+                taskDetailsLiveData.value?.id,
+                "closed",
+                ))
+            if (request.body()?.code == 0) {
+                // When the data is ready, notify the UI layer
+                taskDetailsLiveData.value?.status = "closed"
+                taskDetailsLiveData.postValue(taskDetailsLiveData.value)
+            } else {
+                // Error handling
+                errorMessage.postValue("Failed, unable to complete task!")
+            }
+        } catch (e: Exception) {
+            // Exception handling
+            errorMessage.postValue("Network Error!")
+        }
     }
 
     fun getTaskDetailsFromJson(jsonData: String) {
