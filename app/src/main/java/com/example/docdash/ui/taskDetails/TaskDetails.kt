@@ -5,22 +5,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -29,19 +21,27 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.docdash.R
+import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 @Composable
@@ -51,7 +51,11 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
 
     // Intents to launch task pool and my tasks activities
     val taskPoolIntent = Intent(context, TaskPoolActivity::class.java)
-    val myTasksIntent = Intent(context, TaskPoolActivity::class.java)
+    val myTasksIntent = Intent(context, MyTasksAcitivity::class.java)
+    // These will bring existing task to front if they are already open
+    // Otherwise, they will create a new instance of the activity
+    taskPoolIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+    myTasksIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     // This is the activity result launcher for starting the activity for result.
     val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
