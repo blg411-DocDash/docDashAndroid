@@ -17,7 +17,9 @@
         <activity
             android:name=".ui.logout.LogoutActivity"
             android:exported="false"
-            android:label="@string/logout"/>
+            android:label="@string/logout"
+            android:theme="@style/Theme.DocDash.Layout"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".ui.myTasks.MyTasksAcitivity"
             android:exported="false"

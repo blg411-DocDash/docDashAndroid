@@ -11,4 +11,11 @@ object UIstates {
     var isAvailableTasksValid = false
     var isActiveTasksValid = false
     var isCompletedTasksValid = false
+
+    // Reset the state flags
+    fun reset() {
+        isAvailableTasksValid = false
+        isActiveTasksValid = false
+        isCompletedTasksValid = false
+    }
 }

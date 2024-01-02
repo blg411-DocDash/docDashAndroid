@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.docdash.R
+import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.example.docdash.utils.StringHelper
@@ -129,6 +131,11 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
 
 @Composable
 fun HeaderRow() {
+    val context = LocalContext.current
+    val logoutPage = Intent(context, LogoutActivity::class.java)
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()) { }
+
     Row(modifier = Modifier
         .background(color = colorResource(R.color.dark_blue))
         .fillMaxWidth()
@@ -136,9 +143,12 @@ fun HeaderRow() {
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(painter = painterResource(id = R.drawable.profile),
-            contentDescription = "Profile Icon",
-            tint = Color(0xFFFFFFFF),)
+        IconButton(onClick = { startActivity.launch(logoutPage) }) {
+            Icon(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = "Profile Icon",
+                tint = Color(0xFFFFFFFF),)
+        }
         Spacer(modifier = Modifier.width(25.dp))
         Text(text = stringResource(id = R.string.task_details),
             style = TextStyle(

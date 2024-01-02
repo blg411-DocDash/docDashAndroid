@@ -12,6 +12,7 @@ import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityTaskPoolBinding
 import com.example.docdash.ui.UIstates
+import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.google.gson.Gson
@@ -52,6 +53,12 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
         binding.swipeRefreshTaskPool.setOnRefreshListener {
             viewModel.updateTaskList()
             binding.swipeRefreshTaskPool.isRefreshing = false
+        }
+
+        binding.profileButton.setOnClickListener {
+            // Go to profile
+            val profilePage = Intent(this, LogoutActivity::class.java)
+            startActivity(profilePage)
         }
 
         // Update the task list when the activity is created, not restored
