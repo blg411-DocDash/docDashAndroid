@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import com.example.docdash.R
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
+import com.example.docdash.utils.StringHelper
 
 @Composable
 fun TaskDetails(viewModel: TaskDetailsViewModel) {
@@ -184,11 +185,7 @@ fun TaskContainer(viewModel: TaskDetailsViewModel) {
         PatientContainer(viewModel.taskDetailsLiveData.value?.patient?.name ?: "N/A", viewModel.taskDetailsLiveData.value?.entry?.room ?: "N/A")
 
         // Create a string from the tests
-        val testText: String = if (viewModel.taskDetailsLiveData.value?.tests?.isNotEmpty() == true) {
-            viewModel.taskDetailsLiveData.value?.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
-        } else {
-            "N/A"
-        }
+        val testText: String = StringHelper.buildTestsList(viewModel.taskDetailsLiveData.value?.tests ?: emptyList())
 
         TestContainer(testText)
         Button(
@@ -238,7 +235,7 @@ fun TaskContainer(viewModel: TaskDetailsViewModel) {
                     fontFamily = FontFamily(Font(R.font.fonts)),
                     fontWeight = FontWeight(700),
                     color = when (viewModel.taskDetailsLiveData.value?.status) {
-                        "open" -> { colorResource(id = R.color.hospital_light_blue)
+                        "open" -> { colorResource(id = R.color.dark_blue)
                         }
                         "in progress" -> {colorResource(id = R.color.white)
                         }

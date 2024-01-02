@@ -1,13 +1,16 @@
 package com.example.docdash.ui.taskPool
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.utils.DateTimeHandler
+import com.example.docdash.utils.StringHelper
 
 class ViewHolder(view: View, recyclerViewInterface: TaskPoolInterface) : RecyclerView.ViewHolder(view) {
     val dueDate: TextView = view.findViewById(R.id.taskDue)
@@ -42,16 +45,13 @@ class TaskAdapter(
         return ViewHolder(view, taskPoolInterface)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Bind data to views
         val taskItem = taskList[position]
         holder.dueDate.text = DateTimeHandler.epochSecondsToDateTime(taskItem.deadline?:0 )
         holder.taskDescription.text = taskItem.information ?: "N/A"
-        val testText: String = if (taskItem.tests?.isNotEmpty() == true) {
-            taskItem.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
-        } else {
-            "N/A"
-        }
+        val testText: String = StringHelper.buildTestsList(taskItem.tests)
         holder.testDescription.text = testText
         holder.patient.text = taskItem.patient?.name ?: "N/A"
         holder.room.text = taskItem.entry?.room ?: "N/A"
