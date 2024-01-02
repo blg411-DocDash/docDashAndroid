@@ -2,6 +2,7 @@ package com.example.docdash.ui.myTasks
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -51,11 +52,6 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
 
-        binding.buttonMyTasks1.setOnClickListener {
-            // Refresh the task list
-            viewModel.updateActiveTasks()
-            viewModel.updateCompletedTasks()
-        }
         binding.buttonTaskPool1.setOnClickListener {
             // Go to task pool
             val taskPoolPage = Intent(this, TaskPoolActivity::class.java)
@@ -64,17 +60,30 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
             startActivity(taskPoolPage)
         }
 
+        // Swipe to refresh actions
+        binding.swipeRefreshActiveTasks.setOnRefreshListener {
+            viewModel.updateActiveTasks()
+            binding.swipeRefreshActiveTasks.isRefreshing = false
+        }
+
+        binding.swipeRefreshCompletedTasks.setOnRefreshListener {
+            viewModel.updateCompletedTasks()
+            binding.swipeRefreshCompletedTasks.isRefreshing = false
+        }
+
+
         // Update the task list when the activity is created, not restored
         if (savedInstanceState == null) {
             viewModel.updateActiveTasks()
             viewModel.updateCompletedTasks()
-        }
-        // Update the task list when the state is invalid
-        if (!UIstates.isActiveTasksValid) {
-            viewModel.updateActiveTasks()
-        }
-        if (!UIstates.isCompletedTasksValid) {
-            viewModel.updateCompletedTasks()
+        } else {
+            // Update the task list when the state is invalid
+            if (!UIstates.isActiveTasksValid) {
+                viewModel.updateActiveTasks()
+            }
+            if (!UIstates.isCompletedTasksValid) {
+                viewModel.updateCompletedTasks()
+            }
         }
     }
 
@@ -110,6 +119,7 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
 
     override fun onResume() {
         super.onResume()
+        Log.d("xxx", "onResume: from mytasks")
         // Update the task list when the activity is resumed, not created
         // Update the task list when the state is invalid
         if (!UIstates.isActiveTasksValid) {

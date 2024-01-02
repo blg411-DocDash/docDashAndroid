@@ -2,6 +2,7 @@ package com.example.docdash.ui.taskPool
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -82,6 +83,7 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
     }
 
     override fun onResume() {
+        Log.d("TaskPoolActivity", "onResume")
         super.onResume()
         // Update the task list when the activity is resumed, and ui states are invalid
         if (!UIstates.isAvailableTasksValid) {
