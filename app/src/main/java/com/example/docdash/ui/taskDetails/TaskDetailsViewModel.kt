@@ -10,6 +10,7 @@ import com.example.docdash.ui.UIstates
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 
 class TaskDetailsViewModel : ViewModel() {
     // This is the data that we will fetch asynchronously
@@ -42,13 +43,24 @@ class TaskDetailsViewModel : ViewModel() {
 
     fun takeTask(){
         viewModelScope.launch(Dispatchers.IO) {
-            makeTakeTaskRequest()
+            UIstates.activeTasksMutex.withLock {
+                UIstates.availableTasksMutex.withLock {
+                    makeTakeTaskRequest()
+                }
+            }
         }
     }
 
     fun completeTask(){
         viewModelScope.launch(Dispatchers.IO) {
-            makeCompleteTaskRequest()
+            // There is a consistency issue here, we need to lock the thread
+            // when updating the data, otherwise, the data will be inconsistent
+            // and the UI will not be updated correctly.
+            UIstates.activeTasksMutex.withLock {
+                UIstates.availableTasksMutex.withLock {
+                    makeCompleteTaskRequest()
+                }
+            }
         }
     }
 

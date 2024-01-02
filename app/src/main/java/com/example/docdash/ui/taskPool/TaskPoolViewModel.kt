@@ -9,14 +9,29 @@ import com.example.docdash.services.BackendAPI
 import com.example.docdash.ui.UIstates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 
 
 class TaskPoolViewModel : ViewModel() {
     val taskList = MutableLiveData<List<TaskGetResponse>>()
     val errorMessage = MutableLiveData<String>()
 
+    fun checkTaskList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            UIstates.availableTasksMutex.withLock {
+                if (!UIstates.isAvailableTasksValid) {
+                    makeTaskPoolRequest()
+                }
+            }
+        }
+    }
+
     fun updateTaskList() {
-        viewModelScope.launch(Dispatchers.IO) { makeTaskPoolRequest() }
+        viewModelScope.launch(Dispatchers.IO) {
+            UIstates.availableTasksMutex.withLock {
+                makeTaskPoolRequest()
+            }
+        }
     }
 
     private suspend fun makeTaskPoolRequest() {
@@ -30,7 +45,7 @@ class TaskPoolViewModel : ViewModel() {
                 errorMessage.postValue("Failed to get tasks due to invalid credentials.")
             }
         } catch (e: Exception) {
-            Log.d("XXX", e.toString())
+            Log.d("ERROR OCCURED", e.toString())
             errorMessage.postValue("Failed to get tasks due to network error.")
         }
     }

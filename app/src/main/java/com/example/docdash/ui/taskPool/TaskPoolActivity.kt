@@ -86,9 +86,7 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
         Log.d("TaskPoolActivity", "onResume")
         super.onResume()
         // Update the task list when the activity is resumed, and ui states are invalid
-        if (!UIstates.isAvailableTasksValid) {
-            viewModel.updateTaskList()
-        }
+        viewModel.checkTaskList()
     }
 
     override fun onClickTask(position: Int) {

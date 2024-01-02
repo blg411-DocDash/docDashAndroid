@@ -10,21 +10,47 @@ import com.example.docdash.services.BackendAPI
 import com.example.docdash.ui.UIstates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 
 class MyTasksViewModel: ViewModel() {
     val activeTasks = MutableLiveData<List<TaskGetResponse>>()
     val completedTasks = MutableLiveData<List<TaskGetResponse>>()
     val errorMessage = MutableLiveData<String>()
 
+    fun checkActiveTasks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            UIstates.activeTasksMutex.withLock {
+                if (!UIstates.isActiveTasksValid) {
+                    makeActiveTasksRequest()
+                }
+            }
+        }
+    }
+
+    fun checkCompletedTasks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            UIstates.completedTasksMutex.withLock {
+                if (!UIstates.isCompletedTasksValid) {
+                    makeCompletedTasksRequest()
+                }
+            }
+        }
+    }
+
+
     fun updateActiveTasks() {
         viewModelScope.launch(Dispatchers.IO) {
-            makeActiveTasksRequest()
+            UIstates.activeTasksMutex.withLock {
+                makeActiveTasksRequest()
+            }
         }
     }
 
     fun updateCompletedTasks() {
         viewModelScope.launch(Dispatchers.IO) {
-            makeCompletedTasksRequest()
+            UIstates.completedTasksMutex.withLock {
+                makeCompletedTasksRequest()
+            }
         }
     }
 
@@ -53,7 +79,7 @@ class MyTasksViewModel: ViewModel() {
                 errorMessage.postValue("Failed to get tasks due to invalid credentials.")
             }
         } catch (e: Exception) {
-            Log.d("XXX", e.toString())
+            Log.d("ERROR OCCURED", e.toString())
             errorMessage.postValue("Failed to get tasks due to network error.")
         }
     }

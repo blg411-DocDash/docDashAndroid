@@ -2,7 +2,6 @@ package com.example.docdash.ui.myTasks
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -119,15 +118,10 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
 
     override fun onResume() {
         super.onResume()
-        Log.d("xxx", "onResume: from mytasks")
         // Update the task list when the activity is resumed, not created
         // Update the task list when the state is invalid
-        if (!UIstates.isActiveTasksValid) {
-            viewModel.updateActiveTasks()
-        }
-        if (!UIstates.isCompletedTasksValid) {
-            viewModel.updateCompletedTasks()
-        }
+        viewModel.checkActiveTasks()
+        viewModel.checkCompletedTasks()
     }
 
     override fun onClick(position: Int, type: MyTaskType) {
