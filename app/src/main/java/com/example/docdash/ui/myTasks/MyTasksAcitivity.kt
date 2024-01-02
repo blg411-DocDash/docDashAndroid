@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityMyTasksAcitivityBinding
+import com.example.docdash.ui.UIstates
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.google.gson.Gson
@@ -63,9 +64,16 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
             startActivity(taskPoolPage)
         }
 
-        // Update the task list when the activity is created, not resored
+        // Update the task list when the activity is created, not restored
         if (savedInstanceState == null) {
             viewModel.updateActiveTasks()
+            viewModel.updateCompletedTasks()
+        }
+        // Update the task list when the state is invalid
+        if (!UIstates.isActiveTasksValid) {
+            viewModel.updateActiveTasks()
+        }
+        if (!UIstates.isCompletedTasksValid) {
             viewModel.updateCompletedTasks()
         }
     }
@@ -97,6 +105,18 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
                 Array<TaskGetResponse>::class.java
             ).toList()
             viewModel.completedTasks.postValue(taskList)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Update the task list when the activity is resumed, not created
+        // Update the task list when the state is invalid
+        if (!UIstates.isActiveTasksValid) {
+            viewModel.updateActiveTasks()
+        }
+        if (!UIstates.isCompletedTasksValid) {
+            viewModel.updateCompletedTasks()
         }
     }
 

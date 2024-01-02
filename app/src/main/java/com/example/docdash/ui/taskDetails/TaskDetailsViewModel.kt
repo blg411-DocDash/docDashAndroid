@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.docdash.data.serviceData.requests.TaskUpdateRequest
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.services.BackendAPI
+import com.example.docdash.ui.UIstates
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,6 +62,11 @@ class TaskDetailsViewModel : ViewModel() {
                 // When the data is ready, notify the UI layer
                 taskDetailsLiveData.value?.status = "in progress"
                 taskDetailsLiveData.postValue(taskDetailsLiveData.value)
+                // VERY IMPORTANT!
+                // SINCE YOU HAVE TAKEN THE TASK, YOU NEED TO UPDATE THE TASK POOL & MY TASKS
+                // OTHERWISE, THE TASK WILL STILL BE SHOWN IN THE TASK POOL & WILL NOT BE SHOWN IN THE MY TASKS
+                UIstates.isAvailableTasksValid = false
+                UIstates.isActiveTasksValid = false
             } else {
                 // Error handling
                 errorMessage.postValue("Failed, unable to take task!")
@@ -81,6 +87,11 @@ class TaskDetailsViewModel : ViewModel() {
                 // When the data is ready, notify the UI layer
                 taskDetailsLiveData.value?.status = "closed"
                 taskDetailsLiveData.postValue(taskDetailsLiveData.value)
+                // VERY IMPORTANT!
+                // SINCE YOU HAVE COMPLETED THE TASK, YOU NEED TO UPDATE THE MY TASKS
+                // OTHERWISE, THE TASK WILL STILL BE SHOWN IN THE MY TASKS AS ACTIVE
+                UIstates.isActiveTasksValid = false
+                UIstates.isCompletedTasksValid = false
             } else {
                 // Error handling
                 errorMessage.postValue("Failed, unable to complete task!")

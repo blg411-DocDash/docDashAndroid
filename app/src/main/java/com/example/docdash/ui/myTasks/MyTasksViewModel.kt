@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.services.ApiConstants
 import com.example.docdash.services.BackendAPI
+import com.example.docdash.ui.UIstates
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,7 @@ class MyTasksViewModel: ViewModel() {
             val request = BackendAPI.backendAPI.getTasks("in progress", ApiConstants.EMAIL)
             if (request.body()?.code == 0) {
                 activeTasks.postValue(request.body()?.data?.toList())
+                UIstates.isActiveTasksValid = true
             } else {
                 errorMessage.postValue("Failed to get tasks due to invalid credentials.")
             }
@@ -46,6 +48,7 @@ class MyTasksViewModel: ViewModel() {
             val request = BackendAPI.backendAPI.getTasks("closed", ApiConstants.EMAIL)
             if (request.body()?.code == 0) {
                 completedTasks.postValue(request.body()?.data?.toList())
+                UIstates.isCompletedTasksValid = true
             } else {
                 errorMessage.postValue("Failed to get tasks due to invalid credentials.")
             }

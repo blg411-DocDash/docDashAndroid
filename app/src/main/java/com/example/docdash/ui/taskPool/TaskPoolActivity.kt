@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityTaskPoolBinding
+import com.example.docdash.ui.UIstates
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.google.gson.Gson
@@ -53,7 +54,8 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
         }
 
         // Update the task list when the activity is created, not restored
-        if (savedInstanceState == null)
+        // Update the task list when the Uıstates.isAvailableTasksValid is false
+        if (savedInstanceState == null || !UIstates.isAvailableTasksValid)
         {
             viewModel.updateTaskList()
         }
@@ -76,6 +78,14 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
                 Array<TaskGetResponse>::class.java
             ).toList()
             viewModel.taskList.postValue(taskList)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Update the task list when the activity is resumed, and ui states are invalid
+        if (!UIstates.isAvailableTasksValid) {
+            viewModel.updateTaskList()
         }
     }
 
