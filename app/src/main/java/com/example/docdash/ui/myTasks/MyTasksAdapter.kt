@@ -43,7 +43,7 @@ class MyTasksAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyTaskViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.task_pool_item, parent, false)
+            .inflate(R.layout.task_item, parent, false)
         return MyTaskViewHolder(view, taskPoolInterface, type)
     }
 
