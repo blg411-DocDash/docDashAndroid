@@ -1,16 +1,15 @@
 package com.example.docdash.ui.myTasks
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityMyTasksAcitivityBinding
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
-import com.example.docdash.ui.taskPool.TaskAdapter
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.google.gson.Gson
 
@@ -58,15 +57,17 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
         }
         binding.buttonTaskPool1.setOnClickListener {
             // Go to task pool
-            val myTasksPage = Intent(this, TaskPoolActivity::class.java)
-            startActivity(myTasksPage)
+            val taskPoolPage = Intent(this, TaskPoolActivity::class.java)
+            // Without this flag, the activity will be created again, instead of being restored
+            taskPoolPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(taskPoolPage)
         }
 
         // Update the task list when the activity is created, not resored
-
-        viewModel.updateActiveTasks()
-        viewModel.updateCompletedTasks()
-
+        if (savedInstanceState == null) {
+            viewModel.updateActiveTasks()
+            viewModel.updateCompletedTasks()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

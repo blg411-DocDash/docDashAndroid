@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.docdash.R
+import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityTaskPoolBinding
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.google.gson.Gson
-import com.example.docdash.data.serviceData.response.TaskGetResponse
 
 class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
     private val viewModel: TaskPoolViewModel by viewModels()
@@ -41,7 +41,9 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
 
         // These are the bottom navigation bar buttons
         binding.buttonMyTasks.setOnClickListener {
-            val myTasksPage = Intent(this, MyTasksAcitivity::class.java).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val myTasksPage = Intent(this, MyTasksAcitivity::class.java)
+            // Without this flag, the activity will be created again, instead of being restored
+            myTasksPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(myTasksPage)
         }
 
