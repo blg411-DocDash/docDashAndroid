@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.docdash.R
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 
@@ -163,7 +164,7 @@ fun TaskContainer(viewModel: TaskDetailsViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color(0xFFE3DE56))
+                .background(color = colorResource(id = R.color.app_box_gold))
                 .padding(8.dp)
         ){
             Text(
