@@ -48,9 +48,9 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
             startActivity(myTasksPage)
         }
 
-        binding.buttonTaskPool.setOnClickListener {
-            // refresh the task list
+        binding.swipeRefreshTaskPool.setOnRefreshListener {
             viewModel.updateTaskList()
+            binding.swipeRefreshTaskPool.isRefreshing = false
         }
 
         // Update the task list when the activity is created, not restored
