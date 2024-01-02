@@ -21,6 +21,7 @@
         <activity
             android:name=".ui.taskDetails.TaskDetailsActivity"
             android:exported="false"
+            android:launchMode="singleInstance"
             android:label="@string/task_details" />
         <activity
             android:name=".ui.patientDetails.PatientDetailsActivity"
