@@ -17,4 +17,5 @@
     <color name="app_box_grey">#E4FCFF</color>
     <color name="app_box_gold">#E3DE56</color>
     <color name="app_box_green">#55C360</color>
+    <color name="light_gray">#999999</color>
 </resources>

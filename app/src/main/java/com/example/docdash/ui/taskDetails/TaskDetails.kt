@@ -1,7 +1,6 @@
 package com.example.docdash.ui.taskDetails
 
 import android.content.Intent
-import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,11 +42,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.docdash.R
-import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 @Composable
-fun TaskDetails(task: TaskGetResponse) {
+fun TaskDetails(viewModel: TaskDetailsViewModel) {
     // This is the context of the activity
     val context = LocalContext.current
 
@@ -57,8 +55,7 @@ fun TaskDetails(task: TaskGetResponse) {
 
     // This is the activity result launcher for starting the activity for result.
     val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result -> }
+        contract = ActivityResultContracts.StartActivityForResult()) { }
 
 
     // If the taskGetResponse is null, then we will use default text values,
@@ -75,7 +72,7 @@ fun TaskDetails(task: TaskGetResponse) {
                 .fillMaxSize()
         ) {
             HeaderRow()
-            TaskContainer(task)
+            TaskContainer(viewModel)
         }
         Row(
             modifier = Modifier
@@ -150,7 +147,7 @@ fun HeaderRow() {
     }
 }
 @Composable
-fun TaskContainer(task: TaskGetResponse) {
+fun TaskContainer(viewModel: TaskDetailsViewModel) {
     val style = TextStyle(
         fontSize = 25.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -175,16 +172,16 @@ fun TaskContainer(task: TaskGetResponse) {
                 style = style
             )
             Text(
-                text = task.id ?: "0",
+                text = viewModel.taskDetailsLiveData.value?.id ?: "0",
                 style = style
             )
         }
-        TaskDescription(task.information ?: "N/A")
-        PatientContainer(task.patient?.name ?: "N/A", task.entry?.room ?: "N/A")
+        TaskDescription(viewModel.taskDetailsLiveData.value?.information ?: "N/A")
+        PatientContainer(viewModel.taskDetailsLiveData.value?.patient?.name ?: "N/A", viewModel.taskDetailsLiveData.value?.entry?.room ?: "N/A")
 
         // Create a string from the tests
-        val testText: String = if (task.tests?.isNotEmpty() == true) {
-            task.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
+        val testText: String = if (viewModel.taskDetailsLiveData.value?.tests?.isNotEmpty() == true) {
+            viewModel.taskDetailsLiveData.value?.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
         } else {
             "N/A"
         }
@@ -192,10 +189,24 @@ fun TaskContainer(task: TaskGetResponse) {
         TestContainer(testText)
         Button(
             onClick = {
-                      // TODO
+                if (viewModel.taskDetailsLiveData.value?.status == "open") {
+                    viewModel.takeTask()
+                } else if (viewModel.taskDetailsLiveData.value?.status == "in progress") {
+                    viewModel.completeTask()
+                }
 
             },
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green)),
+            colors = when (viewModel.taskDetailsLiveData.value?.status) {
+                "open" -> {
+                    ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green))
+                }
+                "in progress" -> {
+                    ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue))
+                }
+                else -> {
+                    ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_gray))
+                }
+            },
             shape = RoundedCornerShape(size = 10.dp),
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 30.dp)
@@ -207,18 +218,28 @@ fun TaskContainer(task: TaskGetResponse) {
         ) {
             Text(
                 // Take Task / Complete Task / Task Completed button is generated based on the task status
-                text = if (task.status == "open") {
-                    stringResource(id = R.string.take_task)
-                } else if (task.status == "in progress") {
-                    stringResource(id = R.string.complete_task)
-                } else {
-                    stringResource(id = R.string.task_completed)
+                text = when (viewModel.taskDetailsLiveData.value?.status) {
+                    "open" -> {
+                        stringResource(id = R.string.take_task)
+                    }
+                    "in progress" -> {
+                        stringResource(id = R.string.complete_task)
+                    }
+                    else -> {
+                        stringResource(id = R.string.task_completed)
+                    }
                 },
                 style = TextStyle(
                     fontSize = 30.sp,
                     fontFamily = FontFamily(Font(R.font.fonts)),
                     fontWeight = FontWeight(700),
-                    color = colorResource(id = R.color.dark_blue),
+                    color = when (viewModel.taskDetailsLiveData.value?.status) {
+                        "open" -> { colorResource(id = R.color.hospital_light_blue)
+                        }
+                        "in progress" -> {colorResource(id = R.color.white)
+                        }
+                        else -> {colorResource(id = R.color.black)}
+                    },
                     textAlign = TextAlign.Center,
                 )
             )
