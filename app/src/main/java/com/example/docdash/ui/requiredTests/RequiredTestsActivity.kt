@@ -12,21 +12,15 @@ import kotlinx.coroutines.launch
 
 class RequiredTestsActivity: ComponentActivity() {
     private val viewModel: RequiredTestsViewModel by viewModels()
-    private val taskViewModel: TaskDetailsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (intent.getStringExtra("taskDetails") != null) {
-            taskViewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
-            viewModel.testList.postValue(taskViewModel.taskDetailsLiveData.value?.tests.orEmpty())
-
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
         }
         else {
-            // If the intent does not contain the data, then fetch it from the backend
-            lifecycleScope.launch(Dispatchers.IO) {
-                taskViewModel.getTaskDetails(intent.getStringExtra("taskID")!!)
-                viewModel.testList.postValue(taskViewModel.taskDetailsLiveData.value?.tests.orEmpty())
-            }
+            viewModel.errorMessage.postValue("Failed, task is not available!")
         }
         setContent {
             DocDashTheme {

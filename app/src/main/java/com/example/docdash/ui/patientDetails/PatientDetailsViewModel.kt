@@ -9,8 +9,9 @@ import com.google.gson.Gson
 
 class PatientDetailsViewModel : ViewModel(){
     val taskDetailsLiveData = MutableLiveData<TaskGetResponse>()
-    val patientDetailsLiveData = MutableLiveData<PatientGetResponse>()
+    val patientDetailsLiveData = MutableLiveData<PatientGetResponse?>()
     val errorMessage = MutableLiveData<String>()
+
 
     fun getTaskDetailsFromJson(jsonData: String) {
         // This function will be called from the UI layer.
@@ -20,6 +21,7 @@ class PatientDetailsViewModel : ViewModel(){
         try {
             val taskDetails = gson.fromJson(jsonData, TaskGetResponse::class.java)
             taskDetailsLiveData.postValue(taskDetails)
+            patientDetailsLiveData.postValue(taskDetailsLiveData.value?.patient)
         } catch (e: Exception) {
             Log.e("DeserializationError", "Error parsing JSON data: $jsonData", e)
         }

@@ -20,7 +20,6 @@ class PatientDetailsActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (intent.getStringExtra("taskDetails") != null) {
             viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
-            viewModel.patientDetailsLiveData.postValue(viewModel.taskDetailsLiveData.value?.patient)
         }
         else {
             viewModel.errorMessage.postValue("Failed, task is not available!")

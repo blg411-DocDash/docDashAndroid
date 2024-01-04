@@ -1,6 +1,7 @@
 package com.example.docdash.ui.requiredTests
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,12 +64,12 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
     val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetails)?.let {
+    gson.toJson(viewModel.taskDetailsLiveData)?.let {
         taskDetailsPage.putExtra("taskDetails", it)
     }
-    taskDetailsPage.putExtra("taskID", viewModel.taskDetails.value?.id)
+    taskDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
 
-
+    Log.d("RequiredTests", "Tests: ${viewModel.testList}")
     taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     Column(modifier = Modifier
