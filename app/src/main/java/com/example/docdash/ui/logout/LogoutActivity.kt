@@ -21,7 +21,7 @@ class LogoutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_logout)
 
         val redirectPage = Intent(this, LoginActivity::class.java)
-        redirectPage.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        redirectPage.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
         binding = ActivityLogoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
