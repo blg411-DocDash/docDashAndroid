@@ -20,10 +20,14 @@ class PatientDetailsActivity: ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (intent.getStringExtra("taskDetails") != null) {
             viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+            val tckn = viewModel.patientDetailsLiveData.value?.tckn?: "78099697380";
+            viewModel.patientTestsList(tckn= tckn)
+            // Log.d("Patient", "Patient Tests from activity: ${viewModel.patientTests}")
         }
         else {
             viewModel.errorMessage.postValue("Failed, task is not available!")
         }
+
 
         setContent {
             DocDashTheme {

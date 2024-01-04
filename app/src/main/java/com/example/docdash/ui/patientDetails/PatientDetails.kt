@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -43,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
+import com.example.docdash.data.serviceData.response.TestGetResponse
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+import com.example.docdash.utils.DateTimeHandler
 import com.google.gson.Gson
 
 
@@ -54,19 +57,17 @@ fun PatientDetails(viewModel: PatientDetailsViewModel) {
     val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData)?.let {
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
         taskDetailsPage.putExtra("taskDetails", it)
     }
     taskDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
 
-    Log.d("TaskPage", "TASKPAGE: ${viewModel.taskDetailsLiveData.value?.id}")
-    Log.d("Patient", "Patient: ${viewModel.patientDetailsLiveData.value?.name}")
     taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
 
     Column(modifier = Modifier
         .background(color = colorResource(R.color.background))
-        .padding(bottom=20.dp)
+        .padding(bottom = 20.dp)
         .fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -147,7 +148,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                     ),
                 )
                 Text(
-                    text = viewModel.taskDetailsLiveData.value?.patient?.name?: "",
+                    text = viewModel.patientDetailsLiveData.value?.name?: "",
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -171,7 +172,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                Text(text = stringResource(id = R.string.dummy_text_short),
+                Text(text = viewModel.taskDetailsLiveData.value?.entry?.room?: "",
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -194,7 +195,8 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                Text(text = stringResource(id = R.string.dummy_text_short),
+                Text(
+                    text = viewModel.taskDetailsLiveData.value?.entry?.admitted_for?: "Unknown",
                     style = TextStyle(
                         fontSize = 17.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -222,7 +224,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                                 textDecoration = TextDecoration.Underline,
                             ),
                         )
-                        Text(text = "1.72cm",
+                        Text(text = viewModel.patientDetailsLiveData.value?.height.toString().plus(" cm")?: "",
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -242,7 +244,8 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                                 textDecoration = TextDecoration.Underline,
                             ),
                         )
-                        Text(text = "72kg",
+                        Text(
+                            text = viewModel.patientDetailsLiveData.value?.weight.toString().plus(" kg")?: "",
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -253,7 +256,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                     }
                     Column {
                         Text(
-                            text = stringResource(id = R.string.age),
+                            text = stringResource(id = R.string.dob),
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -262,7 +265,8 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                                 textDecoration = TextDecoration.Underline,
                             ),
                         )
-                        Text(text = stringResource(id = R.string.dummy_number),
+                        Text(
+                            text = DateTimeHandler.epochSecondsToDateTime(viewModel.patientDetailsLiveData.value?.dob?: 0).substring(0, 10),
                             style = TextStyle(
                                 fontSize = 17.sp,
                                 fontFamily = FontFamily(Font(R.font.fonts)),
@@ -275,18 +279,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
-        val tempTestDates = listOf(
-            "04.12.2023",
-            "03.12.2023",
-            "03.12.2023",
-            "02.12.2023"
-        )
-        val testResultsPerDate = mapOf(
-            "04.12.2023" to listOf("CRP", "Whole Blood Count"),
-            "03.12.2023" to listOf("Blood Pressure", "Temperature"),
-            "03.12.2023" to listOf("CRP", "Whole Blood Count"),
-            "02.12.2023" to listOf("Blood Pressure", "Temperature"),
-        )
+
         InfoContainer {
             Column(modifier = Modifier
                 .padding(horizontal = 10.dp, vertical = 3.dp)) {
@@ -300,44 +293,63 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                LazyColumn(
-                ) {
-                    items(tempTestDates) { item ->
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = item,
-                            style = TextStyle(
-                                fontSize = 17.sp,
-                                fontFamily = FontFamily(Font(R.font.fonts)),
-                                fontWeight = FontWeight(700),
-                                color = Color(0xFF04385F),
-                            ),)
-                        for (value in testResultsPerDate[item]!!) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row(modifier = Modifier
-                                .border(
-                                    width = 1.dp,
-                                    color = Color(0xFF04385F),
-                                    shape = RoundedCornerShape(5.dp)
-                                )
-                                .padding(vertical = 2.dp, horizontal = 4.dp)
-                                .fillMaxWidth()
-                            ) {
-                                Text(text = value,
-                                    modifier = Modifier.padding(2.dp),
-                                    style = TextStyle(
-                                        fontSize = 17.sp,
-                                        fontFamily = FontFamily(Font(R.font.fonts)),
-                                        fontWeight = FontWeight(700),
-                                        color = Color(0xFF04385F),
-                                    ),)
-                            }
-                        }
-                    }
-                }
 
+                items(items = viewModel.patientTests)
             }
         }
         Spacer(modifier = Modifier.height(1.dp))
+    }
+}
+
+@Composable
+fun itemContent(item: TestGetResponse){
+
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = item.name ?: "",
+            style = TextStyle(
+                fontSize = 17.sp,
+                fontFamily = FontFamily(Font(R.font.fonts)),
+                fontWeight = FontWeight(700),
+                color = Color(0xFF04385F),
+            ),
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFF04385F),
+                    shape = RoundedCornerShape(5.dp)
+                )
+                .padding(vertical = 2.dp, horizontal = 4.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = item.result ?: "Not completed",
+                modifier = Modifier.padding(2.dp),
+                style = TextStyle(
+                    fontSize = 17.sp,
+                    fontFamily = FontFamily(Font(R.font.fonts)),
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFF04385F),
+                ),
+            )
+
+    }
+
+
+
+}
+@Composable
+fun items(items: List<TestGetResponse>?) {
+    LazyColumn {
+        items?.let { itemList ->
+            items(itemList.size) { index ->
+                itemContent(itemList[index])
+            }
+        }
     }
 }
 
