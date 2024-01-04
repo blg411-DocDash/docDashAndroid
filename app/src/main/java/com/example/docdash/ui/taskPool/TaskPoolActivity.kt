@@ -99,6 +99,8 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
     override fun onClickTask(position: Int) {
         // Intent is required to start another activity
         val taskDetailsPage = Intent(this, TaskDetailsActivity::class.java)
+        taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
         // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
         val gson = Gson()
         gson.toJson(viewModel.taskList.value?.get(position))?.let {

@@ -1,5 +1,9 @@
 package com.example.docdash.ui.patientDetails
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,10 +41,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.docdash.R
+import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+
 
 @Preview
 @Composable
 fun PatientDetails() {
+    val context = LocalContext.current
+
+    val taskDetailsIntent = Intent(context, TaskDetailsActivity::class.java)
+
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()) { }
+
     Column(modifier = Modifier
         .background(color = colorResource(R.color.background))
         .padding(bottom=20.dp)
@@ -54,7 +68,9 @@ fun PatientDetails() {
         }
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                startActivity.launch(taskDetailsIntent)
+            },
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             modifier = Modifier

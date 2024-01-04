@@ -48,6 +48,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.requiredTests.RequiredTestsActivity"
+            android:exported="false"
+            android:label="@string/required_tests"
+            android:launchMode="singleTop" />
     </application>
 
 </manifest>
