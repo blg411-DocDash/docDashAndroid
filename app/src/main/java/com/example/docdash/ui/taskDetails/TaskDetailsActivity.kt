@@ -1,6 +1,7 @@
 package com.example.docdash.ui.taskDetails
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -62,5 +63,18 @@ class TaskDetailsActivity : ComponentActivity() {
         super.onSaveInstanceState(outState)
         // These are overridden to save the state of the activity when it is destroyed
         outState.putString("taskDetails", Gson().toJson(viewModel.taskDetailsLiveData.value))
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // This is overridden to update the screen when the intent is changed
+        if (intent?.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        }
+        else {
+            lifecycleScope.launch(Dispatchers.IO) {
+                viewModel.getTaskDetails(intent?.getStringExtra("taskID")!!)
+            }
+        }
     }
 }

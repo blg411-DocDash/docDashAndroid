@@ -1,9 +1,6 @@
 package com.example.docdash.ui.taskDetails
 
 import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
 import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
@@ -59,10 +57,6 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
     // Otherwise, they will create a new instance of the activity
     taskPoolIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
     myTasksIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-    // This is the activity result launcher for starting the activity for result.
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
 
 
     // If the taskGetResponse is null, then we will use default text values,
@@ -89,7 +83,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
         ) {
             Button(
                 onClick = {
-                          startActivity.launch(taskPoolIntent)
+                          startActivity(context, taskPoolIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -109,7 +103,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
             Spacer(modifier = Modifier.width(12.dp))
             Button(
                 onClick = {
-                            startActivity.launch(myTasksIntent)
+                    startActivity(context, myTasksIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -133,8 +127,6 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
 fun HeaderRow() {
     val context = LocalContext.current
     val logoutPage = Intent(context, LogoutActivity::class.java)
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
 
     Row(modifier = Modifier
         .background(color = colorResource(R.color.dark_blue))
@@ -143,7 +135,7 @@ fun HeaderRow() {
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = { startActivity.launch(logoutPage) }) {
+        IconButton(onClick = { startActivity(context, logoutPage, null) } ) {
             Icon(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = "Profile Icon",
