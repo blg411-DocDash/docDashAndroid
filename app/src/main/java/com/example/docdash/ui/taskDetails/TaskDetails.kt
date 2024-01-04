@@ -41,13 +41,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
 import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.example.docdash.ui.patientDetails.PatientDetailsActivity
 import com.example.docdash.ui.requiredTests.RequiredTestsActivity
+import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.example.docdash.utils.StringHelper
+import com.google.gson.Gson
 
 @Composable
 fun TaskDetails(viewModel: TaskDetailsViewModel) {
@@ -194,12 +197,13 @@ fun TaskContainer(viewModel: TaskDetailsViewModel) {
             )
         }
         TaskDescription(viewModel.taskDetailsLiveData.value?.information ?: "N/A")
-        PatientContainer(viewModel.taskDetailsLiveData.value?.patient?.name ?: "N/A", viewModel.taskDetailsLiveData.value?.entry?.room ?: "N/A")
+        PatientContainer(viewModel.taskDetailsLiveData.value?.patient?.name ?: "N/A", viewModel.taskDetailsLiveData.value?.entry?.room ?: "N/A",
+            viewModel)
 
         // Create a string from the tests
         val testText: String = StringHelper.buildTestsList(viewModel.taskDetailsLiveData.value?.tests ?: emptyList())
 
-        TestContainer(testText)
+        TestContainer(testText, viewModel)
         Button(
             onClick = {
                 if (viewModel.taskDetailsLiveData.value?.status == "open") {
@@ -284,10 +288,19 @@ fun TaskDescription(taskDescription: String){
 }
 
 @Composable
-fun PatientContainer(patient: String, room: String){
+fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewModel){
     val context = LocalContext.current
 
-    val patientDetailsIntent = Intent(context, PatientDetailsActivity::class.java)
+    val patientDetailsPage = Intent(context, PatientDetailsActivity::class.java)
+    // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+    val gson = Gson()
+    gson.toJson(viewModel.taskDetailsLiveData.value?.patient)?.let {
+        patientDetailsPage.putExtra("patient", it)
+    }
+    patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
+
+
+    patientDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()) { }
@@ -348,7 +361,7 @@ fun PatientContainer(patient: String, room: String){
             Spacer(modifier = Modifier.height(5.dp))
             Button(
                 onClick = {
-                    startActivity.launch(patientDetailsIntent)
+                    startActivity(context, patientDetailsPage,null)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
                 shape = RoundedCornerShape(size = 10.dp),
@@ -373,10 +386,17 @@ fun PatientContainer(patient: String, room: String){
 }
 
 @Composable
-fun TestContainer(testDescription: String){
+fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
     val context = LocalContext.current
 
-    val requiredTestsIntent = Intent(context, RequiredTestsActivity::class.java)
+    val requiredTestsPage = Intent(context, RequiredTestsActivity::class.java)
+    val gson = Gson()
+    gson.toJson(viewModel.taskDetailsLiveData.value?.tests)?.let {
+        requiredTestsPage.putExtra("requiredTests", it)
+    }
+    requiredTestsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
+
+    requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()) { }
@@ -414,7 +434,7 @@ fun TestContainer(testDescription: String){
             Spacer(modifier = Modifier.height(5.dp))
             Button(
                 onClick = {
-                    startActivity.launch(requiredTestsIntent)
+                    startActivity(context, requiredTestsPage, null)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
                 shape = RoundedCornerShape(size = 10.dp),
@@ -446,4 +466,3 @@ fun InfoContainer(content: @Composable () -> Unit) {
         color = colorResource(id = R.color.info_container_bg).copy(alpha = 0.9f),
         content = content)
 }
-

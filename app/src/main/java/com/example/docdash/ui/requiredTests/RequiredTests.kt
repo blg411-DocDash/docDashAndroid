@@ -1,5 +1,9 @@
 package com.example.docdash.ui.requiredTests
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -45,10 +49,20 @@ import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TestGetResponse
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+import com.example.docdash.ui.taskDetails.TaskDetailsViewModel
 
-@Preview
+
 @Composable
-fun RequiredTests() {
+fun RequiredTests(viewModel: RequiredTestsViewModel) {
+    val context = LocalContext.current
+
+    val taskDetailsIntent = Intent(context, TaskDetailsActivity::class.java)
+
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()) { }
+
     Column(modifier = Modifier
         .background(color = colorResource(R.color.background))
         .padding(bottom = 20.dp)
@@ -60,11 +74,13 @@ fun RequiredTests() {
         ) {
             HeaderRow()
             TaskDetails()
-            TestContainer()
+            TestContainer(viewModel)
         }
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                startActivity.launch(taskDetailsIntent)
+           },
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             modifier = Modifier
@@ -188,7 +204,7 @@ fun TaskDetails(){
 
 
 @Composable
-fun TestContainer(){
+fun TestContainer(viewModel: RequiredTestsViewModel){
     val tempTestNos = listOf(
         "2144",
         "2145",

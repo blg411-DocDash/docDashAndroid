@@ -8,6 +8,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.docdash.data.serviceData.response.TaskGetResponse
+import com.example.docdash.ui.patientDetails.PatientDetailsActivity
+import com.example.docdash.ui.requiredTests.RequiredTestsActivity
 import com.example.docdash.ui.theme.DocDashTheme
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
