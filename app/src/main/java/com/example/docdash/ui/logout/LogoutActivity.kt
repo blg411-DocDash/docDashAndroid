@@ -28,8 +28,8 @@ class LogoutActivity : AppCompatActivity() {
 
         val logoutButton = binding.buttonLogout
 
-        val emailText = binding.textNameHolder
-        val nameText = binding.textEmailHolder
+        val emailText = binding.textEmailHolder
+        val nameText = binding.textNameHolder
 
         emailText.text = ApiConstants.EMAIL ?: "No Email"
         nameText.text = ApiConstants.NAME ?: "No Name"
