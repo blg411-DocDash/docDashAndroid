@@ -45,6 +45,8 @@ import com.example.docdash.R
 import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
+import com.example.docdash.ui.patientDetails.PatientDetailsActivity
+import com.example.docdash.ui.requiredTests.RequiredTestsActivity
 import com.example.docdash.utils.StringHelper
 
 @Composable
@@ -283,6 +285,13 @@ fun TaskDescription(taskDescription: String){
 
 @Composable
 fun PatientContainer(patient: String, room: String){
+    val context = LocalContext.current
+
+    val patientDetailsIntent = Intent(context, PatientDetailsActivity::class.java)
+
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()) { }
+
     InfoContainer{
         Column(
             modifier = Modifier
@@ -338,7 +347,9 @@ fun PatientContainer(patient: String, room: String){
             }
             Spacer(modifier = Modifier.height(5.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    startActivity.launch(patientDetailsIntent)
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
                 shape = RoundedCornerShape(size = 10.dp),
                 modifier = Modifier
@@ -363,6 +374,13 @@ fun PatientContainer(patient: String, room: String){
 
 @Composable
 fun TestContainer(testDescription: String){
+    val context = LocalContext.current
+
+    val requiredTestsIntent = Intent(context, RequiredTestsActivity::class.java)
+
+    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()) { }
+
     InfoContainer{
         Column(
             modifier = Modifier
@@ -395,7 +413,9 @@ fun TestContainer(testDescription: String){
             }
             Spacer(modifier = Modifier.height(5.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    startActivity.launch(requiredTestsIntent)
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
                 shape = RoundedCornerShape(size = 10.dp),
                 modifier = Modifier
