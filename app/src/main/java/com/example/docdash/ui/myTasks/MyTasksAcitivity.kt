@@ -1,16 +1,17 @@
 package com.example.docdash.ui.myTasks
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityMyTasksAcitivityBinding
+import com.example.docdash.ui.UIstates
+import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
-import com.example.docdash.ui.taskPool.TaskAdapter
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.google.gson.Gson
 
@@ -51,22 +52,44 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
 
-        binding.buttonMyTasks1.setOnClickListener {
-            // Refresh the task list
-            viewModel.updateActiveTasks()
-            viewModel.updateCompletedTasks()
-        }
         binding.buttonTaskPool1.setOnClickListener {
             // Go to task pool
-            val myTasksPage = Intent(this, TaskPoolActivity::class.java)
-            startActivity(myTasksPage)
+            val taskPoolPage = Intent(this, TaskPoolActivity::class.java)
+            // Without this flag, the activity will be created again, instead of being restored
+            taskPoolPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(taskPoolPage)
         }
 
-        // Update the task list when the activity is created, not resored
+        // Swipe to refresh actions
+        binding.swipeRefreshActiveTasks.setOnRefreshListener {
+            viewModel.updateActiveTasks()
+            binding.swipeRefreshActiveTasks.isRefreshing = false
+        }
 
-        viewModel.updateActiveTasks()
-        viewModel.updateCompletedTasks()
+        binding.swipeRefreshCompletedTasks.setOnRefreshListener {
+            viewModel.updateCompletedTasks()
+            binding.swipeRefreshCompletedTasks.isRefreshing = false
+        }
 
+        binding.profileButton1.setOnClickListener {
+            // Go to profile
+            val profilePage = Intent(this, LogoutActivity::class.java)
+            startActivity(profilePage)
+        }
+
+        // Update the task list when the activity is created, not restored
+        if (savedInstanceState == null) {
+            viewModel.updateActiveTasks()
+            viewModel.updateCompletedTasks()
+        } else {
+            // Update the task list when the state is invalid
+            if (!UIstates.isActiveTasksValid) {
+                viewModel.updateActiveTasks()
+            }
+            if (!UIstates.isCompletedTasksValid) {
+                viewModel.updateCompletedTasks()
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -97,6 +120,14 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
             ).toList()
             viewModel.completedTasks.postValue(taskList)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Update the task list when the activity is resumed, not created
+        // Update the task list when the state is invalid
+        viewModel.checkActiveTasks()
+        viewModel.checkCompletedTasks()
     }
 
     override fun onClick(position: Int, type: MyTaskType) {
