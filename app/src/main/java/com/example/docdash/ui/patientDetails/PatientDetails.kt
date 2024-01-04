@@ -40,19 +40,27 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+import com.google.gson.Gson
 
 
-@Preview
 @Composable
-fun PatientDetails() {
+fun PatientDetails(viewModel: PatientDetailsViewModel) {
     val context = LocalContext.current
 
-    val taskDetailsIntent = Intent(context, TaskDetailsActivity::class.java)
+    val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
+    // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+    val gson = Gson()
+    gson.toJson(viewModel.taskDetails)?.let {
+        taskDetailsPage.putExtra("taskDetails", it)
+    }
+    taskDetailsPage.putExtra("taskID", viewModel.taskDetails.value?.id)
 
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
+
+    taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
 
     Column(modifier = Modifier
         .background(color = colorResource(R.color.background))
@@ -64,12 +72,12 @@ fun PatientDetails() {
                 .fillMaxSize()
         ) {
             HeaderRow()
-            OuterContainer()
+            OuterContainer(viewModel)
         }
 
         Button(
             onClick = {
-                startActivity.launch(taskDetailsIntent)
+                startActivity(context, taskDetailsPage, null)
             },
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -118,7 +126,7 @@ fun HeaderRow() {
 }
 
 @Composable
-fun OuterContainer() {
+fun OuterContainer(viewModel: PatientDetailsViewModel) {
     Column(modifier = Modifier
         .padding(horizontal = 24.dp, vertical = 28.dp)
         .background(color = colorResource(R.color.container_bg))
@@ -136,14 +144,17 @@ fun OuterContainer() {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                Text(text = stringResource(id = R.string.dummy_text),
-                    style = TextStyle(
-                        fontSize = 17.sp,
-                        fontFamily = FontFamily(Font(R.font.fonts)),
-                        fontWeight = FontWeight(700),
-                        color = Color(0xFF04385F),
+                viewModel.patientDetails.value?.name?.let {
+                    Text(
+                        text = it,
+                        style = TextStyle(
+                            fontSize = 17.sp,
+                            fontFamily = FontFamily(Font(R.font.fonts)),
+                            fontWeight = FontWeight(700),
+                            color = Color(0xFF04385F),
+                        )
                     )
-                )
+                }
             }
         }
         Spacer(modifier = Modifier.height(10.dp))

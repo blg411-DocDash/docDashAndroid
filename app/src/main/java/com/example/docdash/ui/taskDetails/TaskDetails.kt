@@ -294,16 +294,13 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
     val patientDetailsPage = Intent(context, PatientDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData.value?.patient)?.let {
-        patientDetailsPage.putExtra("patient", it)
+    gson.toJson(viewModel.taskDetailsLiveData)?.let {
+        patientDetailsPage.putExtra("taskDetails", it)
     }
     patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
 
 
     patientDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
 
     InfoContainer{
         Column(
@@ -391,15 +388,12 @@ fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
 
     val requiredTestsPage = Intent(context, RequiredTestsActivity::class.java)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData.value?.tests)?.let {
-        requiredTestsPage.putExtra("requiredTests", it)
+    gson.toJson(viewModel.taskDetailsLiveData)?.let {
+        requiredTestsPage.putExtra("taskDetails", it)
     }
     requiredTestsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
 
     requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
 
     InfoContainer{
         Column(
