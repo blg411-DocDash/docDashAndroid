@@ -156,7 +156,7 @@ fun HeaderRow() {
 @Composable
 fun TaskContainer(viewModel: TaskDetailsViewModel) {
     val style = TextStyle(
-        fontSize = 25.sp,
+        fontSize = 18.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
         fontWeight = FontWeight(700),
         color = colorResource(id = R.color.dark_blue)
