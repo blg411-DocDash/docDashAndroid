@@ -39,6 +39,9 @@
     <string name="ok">OK</string>
     <string name="error">Error</string>
 
+    <string name="limit_list_size">List size limits:</string>
+    <string name="save_settings">Save</string>
+
     <string name="nurse_name">Nurse Name:</string>
     <string name="nurse_email">Email Address:</string>
 
