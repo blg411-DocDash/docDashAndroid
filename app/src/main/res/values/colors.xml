@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="background">#4DDEC2</color>
-    <color name="dark_blue">#034E86</color>
+    <color name="dark_blue">#04385F</color>
     <color name="container_bg">#B8F5E9</color>
     <color name="info_container_bg">#E4FCFF</color>
     <color name="light_green">#7ce987</color>
@@ -17,4 +17,5 @@
     <color name="app_box_grey">#E4FCFF</color>
     <color name="app_box_gold">#E3DE56</color>
     <color name="app_box_green">#55C360</color>
+    <color name="light_gray">#999999</color>
 </resources>

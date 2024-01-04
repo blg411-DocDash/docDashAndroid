@@ -1,27 +1,15 @@
 package com.example.docdash.ui.taskDetails
 
 import android.content.Intent
-import android.content.Context
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -30,34 +18,48 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
-import com.example.docdash.data.serviceData.response.TaskGetResponse
+import com.example.docdash.ui.logout.LogoutActivity
+import com.example.docdash.ui.myTasks.MyTasksAcitivity
+import com.example.docdash.ui.patientDetails.PatientDetailsActivity
+import com.example.docdash.ui.requiredTests.RequiredTestsActivity
 import com.example.docdash.ui.taskPool.TaskPoolActivity
+import com.example.docdash.utils.StringHelper
+import com.google.gson.Gson
 
 @Composable
-fun TaskDetails(task: TaskGetResponse) {
+fun TaskDetails(viewModel: TaskDetailsViewModel) {
     // This is the context of the activity
     val context = LocalContext.current
 
     // Intents to launch task pool and my tasks activities
     val taskPoolIntent = Intent(context, TaskPoolActivity::class.java)
-    val myTasksIntent = Intent(context, TaskPoolActivity::class.java)
-
-    // This is the activity result launcher for starting the activity for result.
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result -> }
+    val myTasksIntent = Intent(context, MyTasksAcitivity::class.java)
+    // These will bring existing task to front if they are already open
+    // Otherwise, they will create a new instance of the activity
+    taskPoolIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+    myTasksIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
 
     // If the taskGetResponse is null, then we will use default text values,
@@ -74,7 +76,7 @@ fun TaskDetails(task: TaskGetResponse) {
                 .fillMaxSize()
         ) {
             HeaderRow()
-            TaskContainer(task)
+            TaskContainer(viewModel)
         }
         Row(
             modifier = Modifier
@@ -84,7 +86,7 @@ fun TaskDetails(task: TaskGetResponse) {
         ) {
             Button(
                 onClick = {
-                          startActivity.launch(taskPoolIntent)
+                    startActivity(context, taskPoolIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -104,7 +106,7 @@ fun TaskDetails(task: TaskGetResponse) {
             Spacer(modifier = Modifier.width(12.dp))
             Button(
                 onClick = {
-                            startActivity.launch(myTasksIntent)
+                    startActivity(context, myTasksIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -126,6 +128,10 @@ fun TaskDetails(task: TaskGetResponse) {
 
 @Composable
 fun HeaderRow() {
+    val context = LocalContext.current
+    val logoutPage = Intent(context, LogoutActivity::class.java)
+    logoutPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
     Row(modifier = Modifier
         .background(color = colorResource(R.color.dark_blue))
         .fillMaxWidth()
@@ -133,9 +139,12 @@ fun HeaderRow() {
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(painter = painterResource(id = R.drawable.profile),
-            contentDescription = "Profile Icon",
-            tint = Color(0xFFFFFFFF),)
+        IconButton(onClick = { startActivity(context, logoutPage, null) } ) {
+            Icon(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = "Profile Icon",
+                tint = Color(0xFFFFFFFF),)
+        }
         Spacer(modifier = Modifier.width(25.dp))
         Text(text = stringResource(id = R.string.task_details),
             style = TextStyle(
@@ -149,9 +158,9 @@ fun HeaderRow() {
     }
 }
 @Composable
-fun TaskContainer(task: TaskGetResponse) {
+fun TaskContainer(viewModel: TaskDetailsViewModel) {
     val style = TextStyle(
-        fontSize = 25.sp,
+        fontSize = 18.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
         fontWeight = FontWeight(700),
         color = colorResource(id = R.color.dark_blue)
@@ -166,7 +175,7 @@ fun TaskContainer(task: TaskGetResponse) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color(0xFFE3DE56))
+                .background(color = colorResource(id = R.color.app_box_gold))
                 .padding(8.dp)
         ){
             Text(
@@ -174,27 +183,38 @@ fun TaskContainer(task: TaskGetResponse) {
                 style = style
             )
             Text(
-                text = task.id ?: "0",
+                text = viewModel.taskDetailsLiveData.value?.id ?: "0",
                 style = style
             )
         }
-        TaskDescription(task.information ?: "N/A")
-        PatientContainer(task.patient?.name ?: "N/A", task.entry?.room ?: "N/A")
+        TaskDescription(viewModel.taskDetailsLiveData.value?.information ?: "N/A")
+        PatientContainer(viewModel.taskDetailsLiveData.value?.patient?.name ?: "N/A", viewModel.taskDetailsLiveData.value?.entry?.room ?: "N/A",
+            viewModel)
 
         // Create a string from the tests
-        val testText: String = if (task.tests?.isNotEmpty() == true) {
-            task.tests!!.joinToString(separator = "\n") { it.information ?: "N/A" }
-        } else {
-            "N/A"
-        }
+        val testText: String = StringHelper.buildTestsList(viewModel.taskDetailsLiveData.value?.tests ?: emptyList())
 
-        TestContainer(testText)
+        TestContainer(testText, viewModel)
         Button(
             onClick = {
-                      // TODO
+                if (viewModel.taskDetailsLiveData.value?.status == "open") {
+                    viewModel.takeTask()
+                } else if (viewModel.taskDetailsLiveData.value?.status == "in progress") {
+                    viewModel.completeTask()
+                }
 
             },
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green)),
+            colors = when (viewModel.taskDetailsLiveData.value?.status) {
+                "open" -> {
+                    ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_green))
+                }
+                "in progress" -> {
+                    ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue))
+                }
+                else -> {
+                    ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.light_gray))
+                }
+            },
             shape = RoundedCornerShape(size = 10.dp),
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 30.dp)
@@ -206,18 +226,28 @@ fun TaskContainer(task: TaskGetResponse) {
         ) {
             Text(
                 // Take Task / Complete Task / Task Completed button is generated based on the task status
-                text = if (task.status == "open") {
-                    stringResource(id = R.string.take_task)
-                } else if (task.status == "in progress") {
-                    stringResource(id = R.string.complete_task)
-                } else {
-                    stringResource(id = R.string.task_completed)
+                text = when (viewModel.taskDetailsLiveData.value?.status) {
+                    "open" -> {
+                        stringResource(id = R.string.take_task)
+                    }
+                    "in progress" -> {
+                        stringResource(id = R.string.complete_task)
+                    }
+                    else -> {
+                        stringResource(id = R.string.task_completed)
+                    }
                 },
                 style = TextStyle(
                     fontSize = 30.sp,
                     fontFamily = FontFamily(Font(R.font.fonts)),
                     fontWeight = FontWeight(700),
-                    color = colorResource(id = R.color.dark_blue),
+                    color = when (viewModel.taskDetailsLiveData.value?.status) {
+                        "open" -> { colorResource(id = R.color.dark_blue)
+                        }
+                        "in progress" -> {colorResource(id = R.color.white)
+                        }
+                        else -> {colorResource(id = R.color.black)}
+                    },
                     textAlign = TextAlign.Center,
                 )
             )
@@ -249,7 +279,18 @@ fun TaskDescription(taskDescription: String){
 }
 
 @Composable
-fun PatientContainer(patient: String, room: String){
+fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewModel){
+    val context = LocalContext.current
+
+    val patientDetailsPage = Intent(context, PatientDetailsActivity::class.java)
+    // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+    val gson = Gson()
+    gson.toJson(viewModel.taskDetailsLiveData.value?.patient)?.let {
+        patientDetailsPage.putExtra("patient", it)
+    }
+    patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
+    patientDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
     InfoContainer{
         Column(
             modifier = Modifier
@@ -305,7 +346,9 @@ fun PatientContainer(patient: String, room: String){
             }
             Spacer(modifier = Modifier.height(5.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    startActivity(context, patientDetailsPage,null)
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
                 shape = RoundedCornerShape(size = 10.dp),
                 modifier = Modifier
@@ -329,7 +372,18 @@ fun PatientContainer(patient: String, room: String){
 }
 
 @Composable
-fun TestContainer(testDescription: String){
+fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
+    val context = LocalContext.current
+
+    val requiredTestsPage = Intent(context, RequiredTestsActivity::class.java)
+    requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
+    val gson = Gson()
+    gson.toJson(viewModel.taskDetailsLiveData.value?.tests)?.let {
+        requiredTestsPage.putExtra("requiredTests", it)
+    }
+    requiredTestsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
+
     InfoContainer{
         Column(
             modifier = Modifier
@@ -362,7 +416,9 @@ fun TestContainer(testDescription: String){
             }
             Spacer(modifier = Modifier.height(5.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    startActivity(context, requiredTestsPage, null)
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
                 shape = RoundedCornerShape(size = 10.dp),
                 modifier = Modifier
@@ -393,4 +449,3 @@ fun InfoContainer(content: @Composable () -> Unit) {
         color = colorResource(id = R.color.info_container_bg).copy(alpha = 0.9f),
         content = content)
 }
-

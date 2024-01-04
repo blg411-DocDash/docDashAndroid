@@ -77,4 +77,7 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0' // Required for swipe refresh layout
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0-rc02"
+
 }

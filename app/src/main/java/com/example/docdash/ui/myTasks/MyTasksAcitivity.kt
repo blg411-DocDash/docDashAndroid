@@ -1,24 +1,24 @@
 package com.example.docdash.ui.myTasks
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.docdash.R
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityMyTasksAcitivityBinding
+import com.example.docdash.ui.UIstates
+import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
-import com.example.docdash.ui.taskPool.TaskAdapter
 import com.example.docdash.ui.taskPool.TaskPoolActivity
-import com.example.docdash.ui.taskPool.TaskPoolInterface
 import com.google.gson.Gson
 
-class MyTasksAcitivity : AppCompatActivity(), TaskPoolInterface {
+class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
     private lateinit var binding: ActivityMyTasksAcitivityBinding
-    private lateinit var activeTasksAdapter: TaskAdapter
-    private lateinit var completedTasksAdapter: TaskAdapter
+    private lateinit var activeTasksAdapter: MyTasksAdapter
+    private lateinit var completedTasksAdapter: MyTasksAdapter
     private val viewModel: MyTasksViewModel by viewModels()
 
 
@@ -31,12 +31,12 @@ class MyTasksAcitivity : AppCompatActivity(), TaskPoolInterface {
 
         // Using the task adapter from task pool since the ui is the same
         val activeTasksRV = binding.activeTasksRW
-        activeTasksAdapter = TaskAdapter(emptyList(), this)
+        activeTasksAdapter = MyTasksAdapter(emptyList(), this, MyTaskType.IN_PROGRESS)
         activeTasksRV.adapter = activeTasksAdapter
         activeTasksRV.layoutManager = LinearLayoutManager(this)
 
         val completedTasksRV = binding.completedTasksRW
-        completedTasksAdapter = TaskAdapter(emptyList(), this)
+        completedTasksAdapter = MyTasksAdapter(emptyList(), this, MyTaskType.COMPLETED)
         completedTasksRV.adapter = completedTasksAdapter
         completedTasksRV.layoutManager = LinearLayoutManager(this)
 
@@ -52,22 +52,43 @@ class MyTasksAcitivity : AppCompatActivity(), TaskPoolInterface {
             Toast.makeText(this, it, Toast.LENGTH_LONG).show()
         }
 
-        binding.buttonMyTasks1.setOnClickListener {
-            // Refresh the task list
-            viewModel.updateActiveTasks()
-            viewModel.updateCompletedTasks()
-        }
         binding.buttonTaskPool1.setOnClickListener {
             // Go to task pool
-            val myTasksPage = Intent(this, TaskPoolActivity::class.java)
-            startActivity(myTasksPage)
+            val taskPoolPage = Intent(this, TaskPoolActivity::class.java)
+            // Without this flag, the activity will be created again, instead of being restored
+            taskPoolPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(taskPoolPage)
         }
 
-        // Update the task list when the activity is created, not resored
-        if (savedInstanceState == null)
-        {
+        // Swipe to refresh actions
+        binding.swipeRefreshActiveTasks.setOnRefreshListener {
+            viewModel.updateActiveTasks()
+            binding.swipeRefreshActiveTasks.isRefreshing = false
+        }
+
+        binding.swipeRefreshCompletedTasks.setOnRefreshListener {
+            viewModel.updateCompletedTasks()
+            binding.swipeRefreshCompletedTasks.isRefreshing = false
+        }
+
+        binding.profileButton1.setOnClickListener {
+            // Go to profile
+            val profilePage = Intent(this, LogoutActivity::class.java)
+            startActivity(profilePage)
+        }
+
+        // Update the task list when the activity is created, not restored
+        if (savedInstanceState == null) {
             viewModel.updateActiveTasks()
             viewModel.updateCompletedTasks()
+        } else {
+            // Update the task list when the state is invalid
+            if (!UIstates.isActiveTasksValid) {
+                viewModel.updateActiveTasks()
+            }
+            if (!UIstates.isCompletedTasksValid) {
+                viewModel.updateCompletedTasks()
+            }
         }
     }
 
@@ -101,8 +122,30 @@ class MyTasksAcitivity : AppCompatActivity(), TaskPoolInterface {
         }
     }
 
-    override fun onClickTask(position: Int) {
-        // Go to task details
-        // TODO solve the problem of having two different task rws
+    override fun onResume() {
+        super.onResume()
+        // Update the task list when the activity is resumed, not created
+        // Update the task list when the state is invalid
+        viewModel.checkActiveTasks()
+        viewModel.checkCompletedTasks()
+    }
+
+    override fun onClick(position: Int, type: MyTaskType) {
+        val taskDetailsPage = Intent(this, TaskDetailsActivity::class.java)
+        taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+        val gson = Gson()
+        if (type == MyTaskType.IN_PROGRESS) {
+            gson.toJson(viewModel.activeTasks.value?.get(position))?.let {
+                taskDetailsPage.putExtra("taskDetails", it)
+            }
+            taskDetailsPage.putExtra("taskID", viewModel.activeTasks.value?.get(position)?.id)
+        } else {
+            gson.toJson(viewModel.completedTasks.value?.get(position))?.let {
+                taskDetailsPage.putExtra("taskDetails", it)
+            }
+            taskDetailsPage.putExtra("taskID", viewModel.completedTasks.value?.get(position)?.id)
+        }
+        startActivity(taskDetailsPage)
     }
 }

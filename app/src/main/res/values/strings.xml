@@ -26,8 +26,24 @@
     <string name="task_completed">Task Completed</string>
     <string name="active_tasks">Active Tasks</string>
     <string name="completed_tasks">Completed Tasks</string>
+    <string name="test_number">Test No: </string>
 
     <string name="back_to_task_details">Back to Task Details</string>
+    <string name="write_results">Write Results Here...</string>
+
+    <string name="logout">Logout</string>
+    <string name="logout_message">Are you sure you want to logout?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+
+    <string name="limit_list_size">List size limits:</string>
+    <string name="save_settings">Save</string>
+
+    <string name="nurse_name">Nurse Name:</string>
+    <string name="nurse_email">Email Address:</string>
 
     <string name="dummy_text_short">Lorem Ipsum</string>
     <string name="dummy_text">Lorem ipsum dolor sit amet</string>

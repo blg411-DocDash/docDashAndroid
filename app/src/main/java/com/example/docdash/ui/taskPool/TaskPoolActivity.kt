@@ -2,17 +2,20 @@ package com.example.docdash.ui.taskPool
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.docdash.R
+import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.databinding.ActivityTaskPoolBinding
+import com.example.docdash.ui.UIstates
+import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.google.gson.Gson
-import com.example.docdash.data.serviceData.response.TaskGetResponse
 
 class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
     private val viewModel: TaskPoolViewModel by viewModels()
@@ -41,17 +44,26 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
 
         // These are the bottom navigation bar buttons
         binding.buttonMyTasks.setOnClickListener {
-            val myTasksPage = Intent(this, MyTasksAcitivity::class.java).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val myTasksPage = Intent(this, MyTasksAcitivity::class.java)
+            // Without this flag, the activity will be created again, instead of being restored
+            myTasksPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(myTasksPage)
         }
 
-        binding.buttonTaskPool.setOnClickListener {
-            // refresh the task list
+        binding.swipeRefreshTaskPool.setOnRefreshListener {
             viewModel.updateTaskList()
+            binding.swipeRefreshTaskPool.isRefreshing = false
         }
 
-        // Update the task list when the activity is created, not resored
-        if (savedInstanceState == null)
+        binding.profileButton.setOnClickListener {
+            // Go to profile
+            val profilePage = Intent(this, LogoutActivity::class.java)
+            startActivity(profilePage)
+        }
+
+        // Update the task list when the activity is created, not restored
+        // Update the task list when the Uıstates.isAvailableTasksValid is false
+        if (savedInstanceState == null || !UIstates.isAvailableTasksValid)
         {
             viewModel.updateTaskList()
         }
@@ -77,9 +89,18 @@ class TaskPoolActivity : AppCompatActivity(), TaskPoolInterface {
         }
     }
 
+    override fun onResume() {
+        Log.d("TaskPoolActivity", "onResume")
+        super.onResume()
+        // Update the task list when the activity is resumed, and ui states are invalid
+        viewModel.checkTaskList()
+    }
+
     override fun onClickTask(position: Int) {
         // Intent is required to start another activity
         val taskDetailsPage = Intent(this, TaskDetailsActivity::class.java)
+        taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
         // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
         val gson = Gson()
         gson.toJson(viewModel.taskList.value?.get(position))?.let {

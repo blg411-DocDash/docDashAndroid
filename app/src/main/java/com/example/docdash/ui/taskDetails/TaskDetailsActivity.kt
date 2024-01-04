@@ -1,19 +1,16 @@
 package com.example.docdash.ui.taskDetails
 
+
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.docdash.data.serviceData.response.TaskGetResponse
-import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.example.docdash.ui.theme.DocDashTheme
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class TaskDetailsActivity : ComponentActivity() {
@@ -25,34 +22,62 @@ class TaskDetailsActivity : ComponentActivity() {
 
         // Initially, construct the screen with the data coming from intent
         if (intent.getStringExtra("taskDetails") != null) {
-            val taskDetails = Gson().fromJson(
-                intent.getStringExtra("taskDetails"),
-                TaskGetResponse::class.java)
-            viewModel.taskDetailsLiveData.postValue(taskDetails)
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        } else {
+            // If the intent does not contain the data, then fetch it from the backend
+            lifecycleScope.launch(Dispatchers.IO) {
+                viewModel.getTaskDetails(intent.getStringExtra("taskID")!!)
+            }
         }
 
         setContent {
             DocDashTheme {
-                // Initially passing null to construct the screen without data, using the placeholder
-                TaskDetails(viewModel.taskDetailsLiveData.value!!)
+                // Passing the view model to the composable function, to be able to fill in the screen with data
+                TaskDetails(viewModel)
+            }
+        }
+
+        // Update the screen when the data is updated
+        viewModel.taskDetailsLiveData.observe(this) {
+            setContent {
+                DocDashTheme {
+                    TaskDetails(viewModel)
+                }
             }
         }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        // These are overriden to restore the state of the activity when it is recreated
+        // These are overridden to restore the state of the activity when it is recreated
         if (savedInstanceState.getString("taskDetails") != null) {
             val taskDetails = Gson().fromJson(
                 savedInstanceState.getString("taskDetails"),
-                TaskGetResponse::class.java)
+                TaskGetResponse::class.java
+            )
             viewModel.taskDetailsLiveData.postValue(taskDetails)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        // These are overriden to save the state of the activity when it is destroyed
+        // These are overridden to save the state of the activity when it is destroyed
         outState.putString("taskDetails", Gson().toJson(viewModel.taskDetailsLiveData.value))
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // This is overridden to update the screen when the intent is changed
+        if (intent?.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        } else {
+            val taskID = intent?.getStringExtra("taskID")
+
+            if (taskID != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    viewModel.getTaskDetails(taskID)
+                }
+            }
+        }
     }
 }
