@@ -1,6 +1,7 @@
 package com.example.docdash.ui.patientDetails
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -53,12 +54,13 @@ fun PatientDetails(viewModel: PatientDetailsViewModel) {
     val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetails)?.let {
+    gson.toJson(viewModel.taskDetailsLiveData)?.let {
         taskDetailsPage.putExtra("taskDetails", it)
     }
-    taskDetailsPage.putExtra("taskID", viewModel.taskDetails.value?.id)
+    taskDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
 
-
+    Log.d("TaskPage", "TASKPAGE: ${viewModel.taskDetailsLiveData.value?.id}")
+    Log.d("Patient", "Patient: ${viewModel.patientDetailsLiveData.value?.name}")
     taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
 
@@ -144,17 +146,16 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                         textDecoration = TextDecoration.Underline,
                     ),
                 )
-                viewModel.patientDetails.value?.name?.let {
-                    Text(
-                        text = it,
-                        style = TextStyle(
-                            fontSize = 17.sp,
-                            fontFamily = FontFamily(Font(R.font.fonts)),
-                            fontWeight = FontWeight(700),
-                            color = Color(0xFF04385F),
-                        )
+                Text(
+                    text = viewModel.taskDetailsLiveData.value?.patient?.name?: "",
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFF04385F),
                     )
-                }
+                )
+
             }
         }
         Spacer(modifier = Modifier.height(10.dp))

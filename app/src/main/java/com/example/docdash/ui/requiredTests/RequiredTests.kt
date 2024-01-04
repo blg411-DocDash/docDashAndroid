@@ -50,18 +50,26 @@ import com.example.docdash.data.serviceData.response.TestGetResponse
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.example.docdash.ui.taskDetails.TaskDetailsViewModel
+import com.google.gson.Gson
 
 
 @Composable
 fun RequiredTests(viewModel: RequiredTestsViewModel) {
     val context = LocalContext.current
 
-    val taskDetailsIntent = Intent(context, TaskDetailsActivity::class.java)
+    val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
+    // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+    val gson = Gson()
+    gson.toJson(viewModel.taskDetails)?.let {
+        taskDetailsPage.putExtra("taskDetails", it)
+    }
+    taskDetailsPage.putExtra("taskID", viewModel.taskDetails.value?.id)
 
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
+
+    taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     Column(modifier = Modifier
         .background(color = colorResource(R.color.background))
@@ -79,7 +87,7 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
 
         Button(
             onClick = {
-                startActivity.launch(taskDetailsIntent)
+                ContextCompat.startActivity(context, taskDetailsPage, null)
            },
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
