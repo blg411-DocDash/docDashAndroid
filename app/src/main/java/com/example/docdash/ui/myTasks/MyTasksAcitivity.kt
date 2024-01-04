@@ -132,6 +132,7 @@ class MyTasksAcitivity : AppCompatActivity(), MyTasksInterface {
 
     override fun onClick(position: Int, type: MyTaskType) {
         val taskDetailsPage = Intent(this, TaskDetailsActivity::class.java)
+        taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
         // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
         val gson = Gson()
         if (type == MyTaskType.IN_PROGRESS) {

@@ -86,7 +86,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
         ) {
             Button(
                 onClick = {
-                          startActivity(context, taskPoolIntent, null)
+                    startActivity(context, taskPoolIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -130,6 +130,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
 fun HeaderRow() {
     val context = LocalContext.current
     val logoutPage = Intent(context, LogoutActivity::class.java)
+    logoutPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     Row(modifier = Modifier
         .background(color = colorResource(R.color.dark_blue))
@@ -375,6 +376,8 @@ fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
     val context = LocalContext.current
 
     val requiredTestsPage = Intent(context, RequiredTestsActivity::class.java)
+    requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
     val gson = Gson()
     gson.toJson(viewModel.taskDetailsLiveData.value?.tests)?.let {
         requiredTestsPage.putExtra("requiredTests", it)

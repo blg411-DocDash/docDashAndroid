@@ -23,8 +23,7 @@ class TaskDetailsActivity : ComponentActivity() {
         // Initially, construct the screen with the data coming from intent
         if (intent.getStringExtra("taskDetails") != null) {
             viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
-        }
-        else {
+        } else {
             // If the intent does not contain the data, then fetch it from the backend
             lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.getTaskDetails(intent.getStringExtra("taskID")!!)
@@ -54,7 +53,8 @@ class TaskDetailsActivity : ComponentActivity() {
         if (savedInstanceState.getString("taskDetails") != null) {
             val taskDetails = Gson().fromJson(
                 savedInstanceState.getString("taskDetails"),
-                TaskGetResponse::class.java)
+                TaskGetResponse::class.java
+            )
             viewModel.taskDetailsLiveData.postValue(taskDetails)
         }
     }
@@ -70,10 +70,13 @@ class TaskDetailsActivity : ComponentActivity() {
         // This is overridden to update the screen when the intent is changed
         if (intent?.getStringExtra("taskDetails") != null) {
             viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
-        }
-        else {
-            lifecycleScope.launch(Dispatchers.IO) {
-                viewModel.getTaskDetails(intent?.getStringExtra("taskID")!!)
+        } else {
+            val taskID = intent?.getStringExtra("taskID")
+
+            if (taskID != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    viewModel.getTaskDetails(taskID)
+                }
             }
         }
     }
