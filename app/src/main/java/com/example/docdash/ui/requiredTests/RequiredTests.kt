@@ -64,7 +64,7 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
     val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData)?.let {
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
         taskDetailsPage.putExtra("taskDetails", it)
     }
     taskDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)

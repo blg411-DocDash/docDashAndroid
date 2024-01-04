@@ -294,7 +294,7 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
     val patientDetailsPage = Intent(context, PatientDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData)?.let {
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
         patientDetailsPage.putExtra("taskDetails", it)
     }
     patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
@@ -388,7 +388,7 @@ fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
 
     val requiredTestsPage = Intent(context, RequiredTestsActivity::class.java)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData)?.let {
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
         requiredTestsPage.putExtra("taskDetails", it)
     }
     requiredTestsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
