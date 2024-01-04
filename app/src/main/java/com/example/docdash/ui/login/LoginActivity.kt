@@ -9,6 +9,7 @@ import com.example.docdash.R
 import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.databinding.ActivityLoginBinding
 import com.example.docdash.services.ApiConstants
+import com.example.docdash.services.ApiSettings
 import com.example.docdash.ui.taskPool.TaskPoolActivity
 
 class LoginActivity : AppCompatActivity() {
@@ -19,6 +20,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val apiSettings = ApiSettings(this)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -32,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
         if(ApiConstants.isLoggedIn())
         {
+            apiSettings.initLimit()
             startActivity(redirectPage)
         }
 

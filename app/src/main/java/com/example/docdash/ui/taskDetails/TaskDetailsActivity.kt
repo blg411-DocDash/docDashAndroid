@@ -8,8 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.docdash.data.serviceData.response.TaskGetResponse
-import com.example.docdash.ui.patientDetails.PatientDetailsActivity
-import com.example.docdash.ui.requiredTests.RequiredTestsActivity
 import com.example.docdash.ui.theme.DocDashTheme
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -65,5 +63,18 @@ class TaskDetailsActivity : ComponentActivity() {
         super.onSaveInstanceState(outState)
         // These are overridden to save the state of the activity when it is destroyed
         outState.putString("taskDetails", Gson().toJson(viewModel.taskDetailsLiveData.value))
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // This is overridden to update the screen when the intent is changed
+        if (intent?.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        }
+        else {
+            lifecycleScope.launch(Dispatchers.IO) {
+                viewModel.getTaskDetails(intent?.getStringExtra("taskID")!!)
+            }
+        }
     }
 }
