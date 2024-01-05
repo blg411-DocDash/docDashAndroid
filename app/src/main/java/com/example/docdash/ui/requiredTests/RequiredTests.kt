@@ -265,6 +265,7 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
         Button(
             onClick = {
                 isEditing = false
+
                 viewModel.updateTestResult(id = item.id, result = text)
             },
             modifier = Modifier

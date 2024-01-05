@@ -1,0 +1,184 @@
+<!-- res/layout/fragment_example.xml -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/TaskInformation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="taskDetailsFragmentTaskDueTitle,taskDetailsFragmentTaskDescription,taskDetailsFragmentTaskNo" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/PatientInformation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="taskDetailsFragmentPatientTitle,taskDetailsFragmentPatientName,taskDetailsFragmentPatientDetailsButton,taskDetailsFragmentRoom,taskDetailsFragmentRoomTitle" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/TestsInformation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="taskDetailsFragmentTestTitle,taskDetailsFragmentTestsName,taskDetailsFragmentTestsDetailsButton" />
+
+    <Button
+        android:id="@+id/taskDetailsFragmentTakeTaskButton"
+        android:layout_width="143dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/take_task"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentTestsDetailsButton"
+        app:layout_constraintVertical_bias="0.396" />
+
+    <Button
+        android:id="@+id/taskDetailsFragmentTaskPoolButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/task_pool"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentTakeTaskButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/taskDetailsFragmentMyTasksButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:text="@string/my_tasks"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.913"
+        app:layout_constraintStart_toEndOf="@+id/taskDetailsFragmentTaskPoolButton"
+        app:layout_constraintTop_toTopOf="@+id/taskDetailsFragmentTaskPoolButton" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentTaskDueTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/task_number"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentTaskDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/dummy_text_very_long"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentTaskNo" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentTaskNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/dummy_number"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/taskDetailsFragmentTaskDueTitle"
+        app:layout_constraintTop_toTopOf="@+id/taskDetailsFragmentTaskDueTitle" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentPatientTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/patient_title"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentTaskDescription" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentPatientName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/dummy_text_short"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/taskDetailsFragmentPatientTitle"
+        app:layout_constraintTop_toTopOf="@+id/taskDetailsFragmentPatientTitle" />
+
+    <Button
+        android:id="@+id/taskDetailsFragmentPatientDetailsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/patient_details"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentRoom" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/dummy_text_short"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/taskDetailsFragmentRoomTitle"
+        app:layout_constraintTop_toTopOf="@+id/taskDetailsFragmentRoomTitle" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentRoomTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/patient_room_title"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentPatientTitle" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentTestTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/tests_title"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentPatientDetailsButton" />
+
+    <TextView
+        android:id="@+id/taskDetailsFragmentTestsName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/dummy_text_short"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/taskDetailsFragmentTestTitle"
+        app:layout_constraintTop_toTopOf="@+id/taskDetailsFragmentTestTitle" />
+
+    <Button
+        android:id="@+id/taskDetailsFragmentTestsDetailsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/tests_details"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsFragmentTestsName" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

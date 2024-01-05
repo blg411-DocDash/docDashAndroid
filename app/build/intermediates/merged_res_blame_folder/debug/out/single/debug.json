@@ -1,0 +1,122 @@
+[
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/drawable-nodpi_edit.png.flat",
+        "source": "com.example.docdash.app-main-64:/drawable-nodpi/edit.png"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/font_fonts.xml.flat",
+        "source": "com.example.docdash.app-main-64:/font/fonts.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/drawable_profile.xml.flat",
+        "source": "com.example.docdash.app-main-64:/drawable/profile.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/font_inter_medium.ttf.flat",
+        "source": "com.example.docdash.app-main-64:/font/inter_medium.ttf"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/drawable-nodpi_ic_task_completed.png.flat",
+        "source": "com.example.docdash.app-main-64:/drawable-nodpi/ic_task_completed.png"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "com.example.docdash.app-main-64:/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/drawable_tick_icon.png.flat",
+        "source": "com.example.docdash.app-main-64:/drawable/tick_icon.png"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.docdash.app-main-64:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.docdash.app-main-64:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/layout_activity_logout.xml.flat",
+        "source": "com.example.docdash.app-main-64:/layout/activity_logout.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/layout_activity_task_pool.xml.flat",
+        "source": "com.example.docdash.app-main-64:/layout/activity_task_pool.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/font_inter_regular.ttf.flat",
+        "source": "com.example.docdash.app-main-64:/font/inter_regular.ttf"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/layout_activity_my_tasks_acitivity.xml.flat",
+        "source": "com.example.docdash.app-main-64:/layout/activity_my_tasks_acitivity.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/layout_activity_login.xml.flat",
+        "source": "com.example.docdash.app-main-64:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/font_inter_bold.ttf.flat",
+        "source": "com.example.docdash.app-main-64:/font/inter_bold.ttf"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/xml_backup_rules.xml.flat",
+        "source": "com.example.docdash.app-main-64:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.docdash.app-main-64:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/layout_fragment_task_details.xml.flat",
+        "source": "com.example.docdash.app-main-64:/layout/fragment_task_details.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-merged_res-62:/layout_task_item.xml.flat",
+        "source": "com.example.docdash.app-main-64:/layout/task_item.xml"
+    }
+]

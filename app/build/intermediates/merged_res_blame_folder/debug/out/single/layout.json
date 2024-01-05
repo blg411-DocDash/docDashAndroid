@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.example.docdash.app-mergeDebugResources-61:/layout/activity_login.xml",
+        "source": "com.example.docdash.app-main-64:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-mergeDebugResources-61:/layout/task_item.xml",
+        "source": "com.example.docdash.app-main-64:/layout/task_item.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-mergeDebugResources-61:/layout/activity_logout.xml",
+        "source": "com.example.docdash.app-main-64:/layout/activity_logout.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-mergeDebugResources-61:/layout/activity_my_tasks_acitivity.xml",
+        "source": "com.example.docdash.app-main-64:/layout/activity_my_tasks_acitivity.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-mergeDebugResources-61:/layout/activity_task_pool.xml",
+        "source": "com.example.docdash.app-main-64:/layout/activity_task_pool.xml"
+    },
+    {
+        "merged": "com.example.docdash.app-mergeDebugResources-61:/layout/fragment_task_details.xml",
+        "source": "com.example.docdash.app-main-64:/layout/fragment_task_details.xml"
+    }
+]
