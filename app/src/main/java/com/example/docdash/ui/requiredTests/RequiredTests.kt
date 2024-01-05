@@ -155,7 +155,7 @@ fun TaskDetails(viewModel: RequiredTestsViewModel){
     InfoContainer {
         Column(
             modifier = Modifier
-                .padding(horizontal = 2.dp ,vertical = 10.dp)
+                .padding(horizontal = 5.dp, vertical = 10.dp)
                 .fillMaxWidth()
         ) {
 
@@ -164,6 +164,7 @@ fun TaskDetails(viewModel: RequiredTestsViewModel){
                     text = stringResource(R.string.task_number),
                     style = style
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = viewModel.taskDetailsLiveData.value?.id?:"",
                     style = style
@@ -174,6 +175,7 @@ fun TaskDetails(viewModel: RequiredTestsViewModel){
                     text = stringResource(R.string.task_due),
                     style = style
                 )
+                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = DateTimeHandler.epochSecondsToDateTime(viewModel.taskDetailsLiveData.value?.deadline?: 0).substring(0, 10),
                     style = style
@@ -184,6 +186,7 @@ fun TaskDetails(viewModel: RequiredTestsViewModel){
                     text = stringResource(R.string.patient_title),
                     style = style
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = viewModel.taskDetailsLiveData.value?.patient?.name?:"",
                     style = style
@@ -195,6 +198,7 @@ fun TaskDetails(viewModel: RequiredTestsViewModel){
                     text = stringResource(R.string.patient_room_title),
                     style = style
                 )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = viewModel.taskDetailsLiveData.value?.entry?.room?:"",
                     style = style
@@ -232,7 +236,7 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
 
     Row(
         modifier = Modifier
-            .padding(horizontal = 30.dp, vertical = 5.dp)
+            .padding(horizontal = 15.dp, vertical = 5.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -241,7 +245,7 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
             onValueChange = {
                 if (text == "Write Results...") {
                     text = ""
-                } else{
+                } else if (isEditing){
                     text = it
                 }
             },
@@ -270,11 +274,11 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
             },
             modifier = Modifier
                 .border(
-                    width = 1.dp,
+                    width = 0.dp,
                     color = Color(0xFF04385F),
-                    shape = RoundedCornerShape(5.dp)
                 ),
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.info_container_bg).copy(alpha = 0.9f)) // Set the minimum height as needed
+
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.info_container_bg)) // Set the minimum height as needed
         ) {
             Text(
                 text = "Save",
@@ -294,34 +298,36 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
 @Composable
 fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
     InfoContainer {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 10.dp)
-        ){
+        Column{
             Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(bottom = 5.dp)
-                    .background (when (item.status) {
-                        "open" -> {
-                             colorResource(id = R.color.light_green)
+                    .background(
+                        when (item.status) {
+                            "open" -> {
+                                colorResource(id = R.color.light_green)
+                            }
+
+                            "in progress" -> {
+                                colorResource(id = R.color.dark_blue)
+                            }
+
+                            else -> {
+                                colorResource(id = R.color.light_gray)
+                            }
                         }
-                        "in progress" -> {
-                            colorResource(id = R.color.dark_blue)
-                        }
-                        else -> {
-                            colorResource(id = R.color.light_gray)
-                        }
-                    }),
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween
-            ){
+            ) {
                 Text(
-                    text = item.name?:"",
+                    text = item.name ?: "",
                     style = TextStyle(
                         fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.fonts)),
                         fontWeight = FontWeight(700),
                         color = colorResource(id = R.color.dark_blue),
+                        textAlign = TextAlign.Center
                     )
                 )
                 IconButton(
@@ -337,16 +343,24 @@ fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
                 }
             }
 
-            Text(
-                text = item.information?:"",
-                style = TextStyle(
-                    fontSize = 17.sp,
-                    fontFamily = FontFamily(Font(R.font.fonts)),
-                    fontWeight = FontWeight(500),
-                    color = colorResource(id = R.color.dark_blue),
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+            ) {
+
+
+                Text(
+                    text = item.information ?: "",
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(500),
+                        color = colorResource(id = R.color.dark_blue),
+                    )
                 )
-            )
-            EditableTextField(item, viewModel)
+                EditableTextField(item, viewModel)
+
+            }
         }
     }
 }

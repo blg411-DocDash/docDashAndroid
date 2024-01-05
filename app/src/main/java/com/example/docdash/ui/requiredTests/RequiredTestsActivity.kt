@@ -40,11 +40,20 @@ class RequiredTestsActivity: ComponentActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         // These are overridden to restore the state of the activity when it is recreated
-
+        if (intent?.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        } else {
+            viewModel.errorMessage.postValue("Failed, task is not available!")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        if (intent?.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        } else {
+            viewModel.errorMessage.postValue("Failed, task is not available!")
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
