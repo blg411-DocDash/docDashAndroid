@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +32,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,6 +55,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
@@ -205,6 +209,7 @@ fun TaskDetails(viewModel: RequiredTestsViewModel){
 
 @Composable
 fun TestContainer(viewModel: RequiredTestsViewModel){
+
     val testList by viewModel.testList.observeAsState(initial = emptyList())
     items(testList, viewModel)
 
@@ -221,7 +226,8 @@ fun InfoContainer(content: @Composable () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) {
-    var text by remember { mutableStateOf(item.result?:"Write Results...") }
+    val itemText = item.result
+    var text by remember { mutableStateOf(itemText ?: "Write Results...") }
     var isEditing by remember { mutableStateOf(true) }
 
     Row(
@@ -235,8 +241,7 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
             onValueChange = {
                 if (text == "Write Results...") {
                     text = ""
-                }
-                else{
+                } else{
                     text = it
                 }
             },
@@ -249,25 +254,40 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
             ),
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .heightIn(min = 50.dp), // Set the minimum height as needed
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = colorResource(id = R.color.app_box_gold)
             ),
         )
-        IconButton(
+
+        Button(
             onClick = {
-                isEditing = false;
+                isEditing = false
                 viewModel.updateTestResult(id = item.id, result = text)
-            }
+            },
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = Color(0xFF04385F),
+                    shape = RoundedCornerShape(5.dp)
+                ),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.info_container_bg).copy(alpha = 0.9f)) // Set the minimum height as needed
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.tick_icon),
-                contentDescription = "Save Icon",
-                tint = colorResource(id = R.color.dark_blue)
+            Text(
+                text = "Save",
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.fonts)),
+                    fontWeight = FontWeight(700),
+                    color = colorResource(id = R.color.dark_blue),
+                    textAlign = TextAlign.Center,
+                )
             )
         }
     }
+
 }
 
 @Composable
@@ -279,7 +299,7 @@ fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
         ){
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(bottom = 5.dp)
                     .background (when (item.status) {
                         "open" -> {
@@ -291,7 +311,8 @@ fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
                         else -> {
                             colorResource(id = R.color.light_gray)
                         }
-                    })
+                    }),
+                horizontalArrangement = Arrangement.SpaceBetween
             ){
                 Text(
                     text = item.name?:"",
@@ -302,6 +323,17 @@ fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
                         color = colorResource(id = R.color.dark_blue),
                     )
                 )
+                IconButton(
+                    onClick = {
+                        //viewModel.updateTestResult(id = item.id, result = text)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.tick_icon),
+                        contentDescription = "Save Icon",
+                        tint = colorResource(id = R.color.dark_blue)
+                    )
+                }
             }
 
             Text(
@@ -324,6 +356,7 @@ fun items(items: List<TestGetResponse>?, viewModel: RequiredTestsViewModel) {
     ) {
         items?.let { itemList ->
             items(itemList.size) { index ->
+
                 TestBox(itemList[index], viewModel)
             }
         }

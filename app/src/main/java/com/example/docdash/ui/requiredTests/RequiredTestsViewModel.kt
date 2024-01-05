@@ -41,6 +41,7 @@ class RequiredTestsViewModel: ViewModel() {
         try {
             val taskDetails = gson.fromJson(jsonData, TaskGetResponse::class.java)
             taskDetailsLiveData.postValue(taskDetails)
+            Log.d("Required Tests", "Tests: ${taskDetails.tests?.toList()}")
             testList.postValue(taskDetails.tests)
         } catch (e: Exception) {
             Log.e("DeserializationError", "Error parsing JSON data: $jsonData", e)
