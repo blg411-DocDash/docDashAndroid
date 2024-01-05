@@ -236,7 +236,7 @@ fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) 
 
     Row(
         modifier = Modifier
-            .padding(horizontal = 15.dp, vertical = 5.dp)
+            .padding(horizontal = 12.dp, vertical = 5.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -328,7 +328,8 @@ fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
                         fontWeight = FontWeight(700),
                         color = colorResource(id = R.color.dark_blue),
                         textAlign = TextAlign.Center
-                    )
+                    ),
+                    modifier = Modifier.padding(10.dp)
                 )
                 IconButton(
                     onClick = {
