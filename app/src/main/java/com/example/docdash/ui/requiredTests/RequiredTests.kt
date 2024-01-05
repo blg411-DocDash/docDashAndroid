@@ -1,11 +1,7 @@
 package com.example.docdash.ui.requiredTests
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,10 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +26,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,11 +44,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import com.example.docdash.R
 import androidx.core.content.ContextCompat
+import com.example.docdash.R
+import com.example.docdash.data.serviceData.response.TestGetResponse
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
-import com.example.docdash.ui.logout.LogoutActivity
+import com.example.docdash.utils.DateTimeHandler
 import com.google.gson.Gson
 
 
@@ -60,7 +57,7 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
     val context = LocalContext.current
 
     val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
-    // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
+
     val gson = Gson()
     gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
         taskDetailsPage.putExtra("taskDetails", it)
@@ -69,7 +66,6 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
 
     Log.d("RequiredTests", "Tests: ${viewModel.testList}")
     taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
 
     Column(modifier = Modifier
         .background(color = colorResource(R.color.background))
@@ -80,15 +76,15 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
                 .weight(1f)
                 .fillMaxSize()
         ) {
-            HeaderRow(context)
-            TaskDetails()
+            HeaderRow()
+            TaskDetails(viewModel)
             TestContainer(viewModel)
         }
 
         Button(
             onClick = {
                 ContextCompat.startActivity(context, taskDetailsPage, null)
-           },
+            },
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
             modifier = Modifier
@@ -111,7 +107,7 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
     }
 }
 @Composable
-fun HeaderRow(context : Context) {
+fun HeaderRow() {
     Row(modifier = Modifier
         .background(color = colorResource(R.color.dark_blue))
         .fillMaxWidth()
@@ -119,14 +115,9 @@ fun HeaderRow(context : Context) {
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = {
-            val logoutIntent = Intent(context, LogoutActivity::class.java)
-            startActivity(context, logoutIntent, null)
-        }) {
-            Icon(painter = painterResource(id = R.drawable.profile),
-                contentDescription = "Profile Icon",
-                tint = Color(0xFFFFFFFF),)
-        }
+        Icon(painter = painterResource(id = R.drawable.profile),
+            contentDescription = "Profile Icon",
+            tint = Color(0xFFFFFFFF),)
         Spacer(modifier = Modifier.width(25.dp))
         Text(text = stringResource(id = R.string.required_tests),
             style = TextStyle(
@@ -141,7 +132,7 @@ fun HeaderRow(context : Context) {
 }
 
 @Composable
-fun TaskDetails(){
+fun TaskDetails(viewModel: RequiredTestsViewModel){
     val style = TextStyle(
         fontSize = 16.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
@@ -151,65 +142,56 @@ fun TaskDetails(){
     InfoContainer {
         Column(
             modifier = Modifier
-                .padding(vertical = 10.dp)
+                .padding(horizontal = 5.dp, vertical = 10.dp)
                 .fillMaxWidth()
         ) {
-            Row (
-                modifier = Modifier
-                    .padding(horizontal = 10.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Row{
-                    Text(
-                        text = stringResource(R.string.task_number),
-                        style = style
-                    )
-                    Text(
-                        text = stringResource(R.string.dummy_number),
-                        style = style
-                    )
-                }
-                Spacer(modifier = Modifier.width(80.dp))
-                Row{
-                    Text(
-                        text = stringResource(R.string.task_due),
-                        style = style
-                    )
-                    Text(
-                        text = stringResource(R.string.dummy_date),
-                        style = style
-                    )
-                }
+
+            Row{
+                Text(
+                    text = stringResource(R.string.task_number),
+                    style = style
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = viewModel.taskDetailsLiveData.value?.id?:"",
+                    style = style
+                )
             }
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Row{
-                    Text(
-                        text = stringResource(R.string.patient_title),
-                        style = style
-                    )
-                    Text(
-                        text = stringResource(R.string.dummy_text_short),
-                        style = style
-                    )
-                }
-                Spacer(modifier = Modifier.width(85.dp))
-                Row {
-                    Text(
-                        text = stringResource(R.string.patient_room_title),
-                        style = style
-                    )
-                    Text(
-                        text = stringResource(R.string.dummy_number),
-                        style = style
-                    )
-                }
+            Row{
+                Text(
+                    text = stringResource(R.string.task_due),
+                    style = style
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = DateTimeHandler.epochSecondsToDateTime(viewModel.taskDetailsLiveData.value?.deadline?: 0).substring(0, 10),
+                    style = style
+                )
             }
+            Row{
+                Text(
+                    text = stringResource(R.string.patient_title),
+                    style = style
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = viewModel.taskDetailsLiveData.value?.patient?.name?:"",
+                    style = style
+                )
+            }
+
+            Row {
+                Text(
+                    text = stringResource(R.string.patient_room_title),
+                    style = style
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = viewModel.taskDetailsLiveData.value?.entry?.room?:"",
+                    style = style
+                )
+            }
+
         }
     }
 
@@ -218,112 +200,10 @@ fun TaskDetails(){
 
 @Composable
 fun TestContainer(viewModel: RequiredTestsViewModel){
-    val tempTestNos = listOf(
-        "2144",
-        "2145",
-        "1013",
-        "1012",
-        "2144",
-        "2145",
-        "1013",
-        "1012"
-    )
-    val testNamesPerNo = mapOf(
-        "2144" to "CRP",
-        "2145" to "Blood Pressure",
-        "1013" to "Whole Blood Count",
-        "1012" to "Temperature",
-        "2144" to "CRP",
-        "2145" to "Blood Pressure",
-        "1013" to "Whole Blood Count",
-        "1012" to "Temperature",
-    )
-    val testInformationPerNo = mapOf(
-        "2144" to "CRP",
-        "2145" to "Blood Pressure",
-        "1013" to "Whole Blood Count",
-        "1012" to "Temperature",
-        "2144" to "CRP",
-        "2145" to "Blood Pressure",
-        "1013" to "Whole Blood Count",
-        "1012" to "Temperature",
-    )
 
-    LazyColumn(
-    ) {
-        items(tempTestNos) { item ->
-                TestBox(id = item,
-                        name = testNamesPerNo[item],
-                        information = stringResource(id = R.string.dummy_text))
-            }
+    val testList by viewModel.testList.observeAsState(initial = emptyList())
+    items(testList, viewModel)
 
-    }
-
-}
-
-@Composable
-fun TestBox(id: String?, name: String?, information: String?){
-    val style = TextStyle(
-        fontSize = 17.sp,
-        fontFamily = FontFamily(Font(R.font.fonts)),
-        fontWeight = FontWeight(700),
-        color = colorResource(id = R.color.dark_blue),
-    )
-
-    InfoContainer {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 10.dp)
-        ){
-            Row {
-                Text(
-                    text = stringResource(id = R.string.test_number),
-                    style = style
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = id ?: "0",
-                    style = style
-                )
-            }
-            Text(
-                text = name?:"",
-                style = style
-            )
-            Text(
-                text = information?:"",
-                style = style
-            )
-            EditableTextField()
-        }
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditableTextField(){
-    val context = stringResource(id = R.string.write_results)
-    var text by remember { mutableStateOf(context)}
-
-    TextField(
-        value = text,
-        onValueChange = {text = it},
-        textStyle = TextStyle(
-            fontSize = 17.sp,
-            fontFamily = FontFamily(Font(R.font.fonts)),
-            fontWeight = FontWeight(700),
-            color = colorResource(id = R.color.dark_blue),
-            textAlign = TextAlign.Center,
-        ),
-        modifier = Modifier
-            .padding(horizontal = 30.dp, vertical = 5.dp),
-        shape = RoundedCornerShape(10.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = colorResource(id = R.color.app_box_gold)
-        )
-
-    )
 }
 @Composable
 fun InfoContainer(content: @Composable () -> Unit) {
@@ -333,3 +213,161 @@ fun InfoContainer(content: @Composable () -> Unit) {
         color = colorResource(id = R.color.info_container_bg).copy(alpha = 0.9f),
         content = content)
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditableTextField(item: TestGetResponse, viewModel: RequiredTestsViewModel) {
+    val itemText = item.result
+    var text by remember(itemText) { mutableStateOf(itemText ?: "Write Results...") }
+    var isEditing by remember { mutableStateOf(true) }
+    val taskStatus = viewModel.taskDetailsLiveData.value?.status
+
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 5.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextField(
+            value = text,
+            onValueChange = {
+                if (text == "Write Results...") {
+                    text = ""
+                } else if (isEditing && item.status != "closed" ){
+                    text = it
+                }
+            },
+            textStyle = TextStyle(
+                fontSize = 17.sp,
+                fontFamily = FontFamily(Font(R.font.fonts)),
+                fontWeight = FontWeight(700),
+                color = colorResource(id = R.color.dark_blue),
+                textAlign = TextAlign.Center,
+            ),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .heightIn(min = 50.dp), // Set the minimum height as needed
+            shape = RoundedCornerShape(10.dp),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = colorResource(id = R.color.app_box_gold)
+            ),
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        Button(
+            onClick = {
+                if (taskStatus == "in progress") {
+                    isEditing = false
+                    viewModel.updateTestResult(id = item.id, result = text)
+                }
+            },
+             colors = ButtonDefaults.buttonColors(
+                 containerColor = when (taskStatus) {
+                     "in progress" -> {
+                         colorResource(id = R.color.light_green)
+                     }
+                     else -> {
+                         colorResource(id = R.color.light_gray)
+                     }
+                 }
+            )
+        ) {
+            Text(
+                text = "Save",
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily(Font(R.font.fonts)),
+                    fontWeight = FontWeight(700),
+                    color = colorResource(id = R.color.info_container_bg),
+                    textAlign = TextAlign.Center,
+                )
+            )
+        }
+    }
+
+}
+
+@Composable
+fun TestBox(item: TestGetResponse, viewModel: RequiredTestsViewModel){
+    InfoContainer {
+        Column{
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 5.dp)
+                    .background(
+                        when (item.status) {
+                            "open" -> {
+                                colorResource(id = R.color.light_green)
+                            }
+
+                            "in progress" -> {
+                                colorResource(id = R.color.dark_blue)
+                            }
+
+                            else -> {
+                                colorResource(id = R.color.light_gray)
+                            }
+                        }
+                    ),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = item.name ?: "",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(700),
+                        color = colorResource(id = R.color.dark_blue),
+                        textAlign = TextAlign.Center
+                    ),
+                    modifier = Modifier.padding(10.dp)
+                )
+                IconButton(
+                    onClick = {
+                        //viewModel.updateTestResult(id = item.id, result = text)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.tick_icon),
+                        contentDescription = "Save Icon",
+                        tint = colorResource(id = R.color.dark_blue)
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+            ) {
+
+
+                Text(
+                    text = item.information ?: "",
+                    style = TextStyle(
+                        fontSize = 17.sp,
+                        fontFamily = FontFamily(Font(R.font.fonts)),
+                        fontWeight = FontWeight(500),
+                        color = colorResource(id = R.color.dark_blue),
+                    )
+                )
+                EditableTextField(item, viewModel)
+
+            }
+        }
+    }
+}
+
+@Composable
+fun items(items: List<TestGetResponse>?, viewModel: RequiredTestsViewModel) {
+    LazyColumn(
+    ) {
+        items?.let { itemList ->
+            items(itemList.size) { index ->
+
+                TestBox(itemList[index], viewModel)
+            }
+        }
+    }
+}
+
