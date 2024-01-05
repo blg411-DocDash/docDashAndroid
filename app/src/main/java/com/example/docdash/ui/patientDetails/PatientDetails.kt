@@ -1,10 +1,6 @@
 package com.example.docdash.ui.patientDetails
 
 import android.content.Intent
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,7 +33,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
@@ -294,7 +287,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
                     ),
                 )
 
-                items(items = viewModel.patientTests)
+                Items(items = viewModel.patientTests.value)
             }
         }
         Spacer(modifier = Modifier.height(1.dp))
@@ -302,7 +295,7 @@ fun OuterContainer(viewModel: PatientDetailsViewModel) {
 }
 
 @Composable
-fun itemContent(item: TestGetResponse){
+fun ItemContent(item: TestGetResponse){
 
         Spacer(modifier = Modifier.height(4.dp))
         Text(
@@ -343,11 +336,11 @@ fun itemContent(item: TestGetResponse){
 
 }
 @Composable
-fun items(items: List<TestGetResponse>?) {
+fun Items(items: List<TestGetResponse>?) {
     LazyColumn {
         items?.let { itemList ->
             items(itemList.size) { index ->
-                itemContent(itemList[index])
+                ItemContent(itemList[index])
             }
         }
     }

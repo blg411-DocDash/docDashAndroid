@@ -1,6 +1,7 @@
 package com.example.docdash.ui.taskDetails
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,10 +46,9 @@ import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
 import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.myTasks.MyTasksAcitivity
-import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.example.docdash.ui.patientDetails.PatientDetailsActivity
 import com.example.docdash.ui.requiredTests.RequiredTestsActivity
-import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+import com.example.docdash.ui.taskPool.TaskPoolActivity
 import com.example.docdash.utils.StringHelper
 import com.google.gson.Gson
 
@@ -298,7 +298,7 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
         patientDetailsPage.putExtra("taskDetails", it)
     }
     patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
-
+    patientDetailsPage.putExtra("tckn", viewModel.taskDetailsLiveData.value?.patient?.tckn)
 
     patientDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
@@ -358,6 +358,7 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
             Spacer(modifier = Modifier.height(5.dp))
             Button(
                 onClick = {
+                    Log.d("XXX", "tckn: ${viewModel.taskDetailsLiveData.value?.patient?.tckn}")
                     startActivity(context, patientDetailsPage,null)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),

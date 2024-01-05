@@ -12,22 +12,19 @@ import com.example.docdash.ui.UIstates
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.withLock
 
 class PatientDetailsViewModel : ViewModel(){
     val taskDetailsLiveData = MutableLiveData<TaskGetResponse>()
     val patientDetailsLiveData = MutableLiveData<PatientGetResponse?>()
-    var patientTests: List<TestGetResponse>? = emptyList()
+    val patientTests = MutableLiveData<List<TestGetResponse>>()
     val errorMessage = MutableLiveData<String>()
 
     fun patientTestsList(tckn: String?){
         viewModelScope.launch(Dispatchers.IO) {
-            UIstates.availablePatientTestsMutex.withLock {
-                getPatientTests(tckn = tckn)
-                Log.d("Patient", "Patient Tests from view: $patientTests")
-            }
+            getPatientTests(tckn = tckn)
         }
     }
+
     suspend fun getPatientTests(tckn: String?) {
         // Suspend functions work in the background thread
         // and do not block the main thread, this is required
@@ -42,7 +39,7 @@ class PatientDetailsViewModel : ViewModel(){
             if (request.body()?.code == 0) {
                 // When the data is ready, notify the UI layer
 
-                patientTests = (request.body()?.data)
+                patientTests.postValue(request.body()?.data?.toList())
                 UIstates.isAvailablePatientTestsValid = true
             } else {
                 // Error handling

@@ -7,7 +7,6 @@ object UIstates {
     val availableTasksMutex: Mutex = Mutex()
     val activeTasksMutex: Mutex = Mutex()
     val completedTasksMutex: Mutex = Mutex()
-    val availablePatientTestsMutex: Mutex = Mutex()
     // State Flags
     var isAvailableTasksValid = false
     var isActiveTasksValid = false
