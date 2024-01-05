@@ -1,5 +1,6 @@
 package com.example.docdash.ui.taskDetails
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -86,7 +87,7 @@ class TaskDetailsViewModel : ViewModel() {
                 UIstates.isActiveTasksValid = false
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, unable to take task!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling
@@ -111,7 +112,7 @@ class TaskDetailsViewModel : ViewModel() {
                 UIstates.isCompletedTasksValid = false
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, unable to complete task!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling
@@ -124,7 +125,11 @@ class TaskDetailsViewModel : ViewModel() {
         // This function will parse the JSON data and
         // notify the UI layer when the data is ready.
         val gson = Gson()
-        val taskDetails = gson.fromJson(jsonData, TaskGetResponse::class.java)
-        taskDetailsLiveData.postValue(taskDetails)
+        try {
+            val taskDetails = gson.fromJson(jsonData, TaskGetResponse::class.java)
+            taskDetailsLiveData.postValue(taskDetails)
+        } catch (e: Exception) {
+            Log.e("DeserializationError", "Error parsing JSON data: $jsonData", e)
+        }
     }
 }

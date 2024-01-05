@@ -2,6 +2,7 @@ package com.example.docdash.services
 
 import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.data.serviceData.requests.TaskUpdateRequest
+import com.example.docdash.data.serviceData.requests.TestResultUpdateRequest
 import com.example.docdash.data.serviceData.response.EntryGetResponse
 import com.example.docdash.data.serviceData.response.LoginResponse
 import com.example.docdash.data.serviceData.response.PatientGetResponse
@@ -62,4 +63,17 @@ interface BackendService {
         @Query("task_id") taskID : String?,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
     ): Response<ApiResponse<Array<TestGetResponse>>>
+
+    @GET("tests")
+    suspend fun getPatientTests(
+        @Query("tckn") tckn : String?,
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<Array<TestGetResponse>>>
+
+    @PUT("tests")
+    suspend fun updateTestResult(
+        @Body testResultUpdateRequest: TestResultUpdateRequest,
+        @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
+    ): Response<ApiResponse<TaskUpdateResponse>>
+
 }

@@ -33,7 +33,13 @@
         <activity
             android:name=".ui.patientDetails.PatientDetailsActivity"
             android:exported="false"
-            android:label="@string/patient_details" />
+            android:label="@string/patient_details"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.requiredTests.RequiredTestsActivity"
+            android:exported="false"
+            android:label="Required Tests"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.taskPool.TaskPoolActivity"
             android:exported="false"
@@ -48,11 +54,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.requiredTests.RequiredTestsActivity"
-            android:exported="false"
-            android:label="@string/required_tests"
-            android:launchMode="singleTop" />
     </application>
 
 </manifest>
