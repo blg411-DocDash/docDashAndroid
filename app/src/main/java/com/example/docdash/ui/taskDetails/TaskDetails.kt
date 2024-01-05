@@ -1,6 +1,10 @@
 package com.example.docdash.ui.taskDetails
 
 import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -285,10 +289,11 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
     val patientDetailsPage = Intent(context, PatientDetailsActivity::class.java)
     // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData.value?.patient)?.let {
-        patientDetailsPage.putExtra("patient", it)
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
+        patientDetailsPage.putExtra("taskDetails", it)
     }
     patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
+    patientDetailsPage.putExtra("tckn", viewModel.taskDetailsLiveData.value?.patient?.tckn)
     patientDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     InfoContainer{
@@ -347,6 +352,7 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
             Spacer(modifier = Modifier.height(5.dp))
             Button(
                 onClick = {
+                    Log.d("XXX", "tckn: ${viewModel.taskDetailsLiveData.value?.patient?.tckn}")
                     startActivity(context, patientDetailsPage,null)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -379,11 +385,12 @@ fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
     requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     val gson = Gson()
-    gson.toJson(viewModel.taskDetailsLiveData.value?.tests)?.let {
-        requiredTestsPage.putExtra("requiredTests", it)
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
+        requiredTestsPage.putExtra("taskDetails", it)
     }
     requiredTestsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
-
+    requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+  
     InfoContainer{
         Column(
             modifier = Modifier

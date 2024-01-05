@@ -32,6 +32,7 @@ class LogoutActivity : AppCompatActivity() {
 
         val logoutButton = binding.buttonLogout
 
+
         val emailText = binding.textNameHolder
         val nameText = binding.textEmailHolder
         val limitText = binding.editTextListLimitSetting

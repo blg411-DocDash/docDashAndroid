@@ -14,16 +14,12 @@ class RequiredTestsActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //  Read the data from the intent
-        val taskIdFromIntent = intent.getStringExtra("taskID")
-        if (taskIdFromIntent != null){
-            viewModel.taskID.postValue(taskIdFromIntent)
+        if (intent.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
         }
-        val requiredTestsFromIntent = intent.getStringExtra("requiredTests")
-        if (requiredTestsFromIntent != null){
-            viewModel.getTestsListFromJson(requiredTestsFromIntent)
+        else {
+            viewModel.errorMessage.postValue("Failed, task is not available!")
         }
-
 
         setContent {
             DocDashTheme {

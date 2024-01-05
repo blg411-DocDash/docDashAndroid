@@ -2,6 +2,10 @@ package com.example.docdash.ui.requiredTests
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,6 +49,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
+import com.example.docdash.data.serviceData.response.TestGetResponse
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import com.example.docdash.ui.taskDetails.TaskDetailsActivity
+import com.example.docdash.ui.taskDetails.TaskDetailsViewModel
 import com.example.docdash.ui.logout.LogoutActivity
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.google.gson.Gson
@@ -54,13 +65,16 @@ import com.google.gson.Gson
 fun RequiredTests(viewModel: RequiredTestsViewModel) {
     val context = LocalContext.current
 
-    val taskDetailsIntent = Intent(context, TaskDetailsActivity::class.java)
-    taskDetailsIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-    taskDetailsIntent.putExtra("taskID", viewModel.taskID.value)
+    val taskDetailsPage = Intent(context, TaskDetailsActivity::class.java)
+    // You can pass data to the activity with putExtra, they need to be basic types (string, int, etc.)
     val gson = Gson()
-    if (viewModel.testList.value != null) {
-        taskDetailsIntent.putExtra("requiredTests", gson.toJson(viewModel.testList.value))
+    gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
+        taskDetailsPage.putExtra("taskDetails", it)
     }
+    taskDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
+
+    Log.d("RequiredTests", "Tests: ${viewModel.testList}")
+    taskDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
 
     Column(modifier = Modifier
@@ -79,7 +93,7 @@ fun RequiredTests(viewModel: RequiredTestsViewModel) {
 
         Button(
             onClick = {
-                startActivity(context, taskDetailsIntent, null)
+                ContextCompat.startActivity(context, taskDetailsPage, null)
            },
             shape = RoundedCornerShape(15.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
