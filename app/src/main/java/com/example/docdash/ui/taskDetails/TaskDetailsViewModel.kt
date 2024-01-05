@@ -86,7 +86,7 @@ class TaskDetailsViewModel : ViewModel() {
                 UIstates.isActiveTasksValid = false
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, unable to take task!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling
@@ -111,7 +111,7 @@ class TaskDetailsViewModel : ViewModel() {
                 UIstates.isCompletedTasksValid = false
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, unable to complete task!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling
