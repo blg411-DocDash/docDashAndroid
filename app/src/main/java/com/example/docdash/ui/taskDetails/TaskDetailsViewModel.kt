@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.docdash.data.serviceData.requests.TaskUpdateRequest
 import com.example.docdash.data.serviceData.response.TaskGetResponse
 import com.example.docdash.services.BackendAPI
+import com.example.docdash.services.ExceptionMessages
 import com.example.docdash.ui.UIstates
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -31,10 +32,14 @@ class TaskDetailsViewModel : ViewModel() {
             val request = BackendAPI.backendAPI.getTask(taskID)
             if (request.body()?.code == 0) {
                 // When the data is ready, notify the UI layer
-                taskDetailsLiveData.postValue(request.body()?.data)
+                if (request.body()?.data != null) {
+                    taskDetailsLiveData.postValue(request.body()?.data!!)
+                } else {
+                    errorMessage.postValue("Failed, no data was returned!")
+                }
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, incorrect credentials!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling
@@ -82,7 +87,7 @@ class TaskDetailsViewModel : ViewModel() {
                 UIstates.isActiveTasksValid = false
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, unable to take task!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling
@@ -107,7 +112,7 @@ class TaskDetailsViewModel : ViewModel() {
                 UIstates.isCompletedTasksValid = false
             } else {
                 // Error handling
-                errorMessage.postValue("Failed, unable to complete task!")
+                errorMessage.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
             }
         } catch (e: Exception) {
             // Exception handling

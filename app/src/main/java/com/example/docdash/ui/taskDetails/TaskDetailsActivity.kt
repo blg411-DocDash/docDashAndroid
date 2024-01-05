@@ -8,8 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.docdash.data.serviceData.response.TaskGetResponse
-import com.example.docdash.ui.patientDetails.PatientDetailsActivity
-import com.example.docdash.ui.requiredTests.RequiredTestsActivity
 import com.example.docdash.ui.theme.DocDashTheme
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +23,7 @@ class TaskDetailsActivity : ComponentActivity() {
         // Initially, construct the screen with the data coming from intent
         if (intent.getStringExtra("taskDetails") != null) {
             viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
-        }
-        else {
+        } else {
             // If the intent does not contain the data, then fetch it from the backend
             lifecycleScope.launch(Dispatchers.IO) {
                 viewModel.getTaskDetails(intent.getStringExtra("taskID")!!)
@@ -56,7 +53,8 @@ class TaskDetailsActivity : ComponentActivity() {
         if (savedInstanceState.getString("taskDetails") != null) {
             val taskDetails = Gson().fromJson(
                 savedInstanceState.getString("taskDetails"),
-                TaskGetResponse::class.java)
+                TaskGetResponse::class.java
+            )
             viewModel.taskDetailsLiveData.postValue(taskDetails)
         }
     }
@@ -65,5 +63,21 @@ class TaskDetailsActivity : ComponentActivity() {
         super.onSaveInstanceState(outState)
         // These are overridden to save the state of the activity when it is destroyed
         outState.putString("taskDetails", Gson().toJson(viewModel.taskDetailsLiveData.value))
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        // This is overridden to update the screen when the intent is changed
+        if (intent?.getStringExtra("taskDetails") != null) {
+            viewModel.getTaskDetailsFromJson(intent.getStringExtra("taskDetails")!!)
+        } else {
+            val taskID = intent?.getStringExtra("taskID")
+
+            if (taskID != null) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    viewModel.getTaskDetails(taskID)
+                }
+            }
+        }
     }
 }

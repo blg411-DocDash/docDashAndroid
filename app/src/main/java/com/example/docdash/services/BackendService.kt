@@ -29,6 +29,7 @@ interface BackendService {
     suspend fun getTasks(
         @Query("status") status : String?,
         @Query("nurse_email") nurse : String?,
+        @Query("limit") limit: Int? = ApiConstants.LIST_LIMIT,
         @Header ("Authorization") bearerToken : String? = ApiConstants.TOKEN
     ): Response<ApiResponse<Array<TaskGetResponse>>>
 

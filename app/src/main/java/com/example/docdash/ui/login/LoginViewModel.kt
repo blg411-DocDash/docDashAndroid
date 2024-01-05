@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.docdash.data.serviceData.requests.LoginRequest
 import com.example.docdash.services.ApiConstants
 import com.example.docdash.services.BackendAPI
+import com.example.docdash.services.ExceptionMessages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -52,11 +53,10 @@ class LoginViewModel : ViewModel() {
                 }
                 else
                 {
-                    loginError.postValue("Login failed due to invalid credentials.")
+                    loginError.postValue(ExceptionMessages.getExceptionMessage(request.body()?.code))
                     loginStatus.postValue(false)
                 }
             } catch (e: Exception) {
-                // TODO: Handle network error
                 loginError.postValue("Login failed due to network error.")
                 loginStatus.postValue(false)
             } finally {

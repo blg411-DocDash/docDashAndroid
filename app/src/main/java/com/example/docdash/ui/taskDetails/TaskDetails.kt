@@ -65,10 +65,6 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
     taskPoolIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
     myTasksIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
-    // This is the activity result launcher for starting the activity for result.
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
-
 
     // If the taskGetResponse is null, then we will use default text values,
     // otherwise we will use the values from the taskGetResponse.
@@ -94,7 +90,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
         ) {
             Button(
                 onClick = {
-                          startActivity.launch(taskPoolIntent)
+                    startActivity(context, taskPoolIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -114,7 +110,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
             Spacer(modifier = Modifier.width(12.dp))
             Button(
                 onClick = {
-                            startActivity.launch(myTasksIntent)
+                    startActivity(context, myTasksIntent, null)
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.dark_blue)),
@@ -138,8 +134,7 @@ fun TaskDetails(viewModel: TaskDetailsViewModel) {
 fun HeaderRow() {
     val context = LocalContext.current
     val logoutPage = Intent(context, LogoutActivity::class.java)
-    val startActivity: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()) { }
+    logoutPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     Row(modifier = Modifier
         .background(color = colorResource(R.color.dark_blue))
@@ -148,7 +143,7 @@ fun HeaderRow() {
         .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = { startActivity.launch(logoutPage) }) {
+        IconButton(onClick = { startActivity(context, logoutPage, null) } ) {
             Icon(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = "Profile Icon",
@@ -169,7 +164,7 @@ fun HeaderRow() {
 @Composable
 fun TaskContainer(viewModel: TaskDetailsViewModel) {
     val style = TextStyle(
-        fontSize = 25.sp,
+        fontSize = 18.sp,
         fontFamily = FontFamily(Font(R.font.fonts)),
         fontWeight = FontWeight(700),
         color = colorResource(id = R.color.dark_blue)
@@ -299,7 +294,6 @@ fun PatientContainer(patient: String, room: String, viewModel: TaskDetailsViewMo
     }
     patientDetailsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
     patientDetailsPage.putExtra("tckn", viewModel.taskDetailsLiveData.value?.patient?.tckn)
-
     patientDetailsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
 
     InfoContainer{
@@ -388,14 +382,15 @@ fun TestContainer(testDescription: String, viewModel: TaskDetailsViewModel){
     val context = LocalContext.current
 
     val requiredTestsPage = Intent(context, RequiredTestsActivity::class.java)
+    requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+
     val gson = Gson()
     gson.toJson(viewModel.taskDetailsLiveData.value)?.let {
         requiredTestsPage.putExtra("taskDetails", it)
     }
     requiredTestsPage.putExtra("taskID", viewModel.taskDetailsLiveData.value?.id)
-
     requiredTestsPage.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-
+  
     InfoContainer{
         Column(
             modifier = Modifier

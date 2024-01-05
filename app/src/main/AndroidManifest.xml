@@ -23,12 +23,13 @@
         <activity
             android:name=".ui.myTasks.MyTasksAcitivity"
             android:exported="false"
-            android:theme="@style/Theme.DocDash.Layout" />
+            android:theme="@style/Theme.DocDash.Layout"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.taskDetails.TaskDetailsActivity"
             android:exported="false"
             android:label="@string/task_details"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.patientDetails.PatientDetailsActivity"
             android:exported="false"
@@ -42,7 +43,8 @@
         <activity
             android:name=".ui.taskPool.TaskPoolActivity"
             android:exported="false"
-            android:theme="@style/Theme.DocDash.Layout" />
+            android:theme="@style/Theme.DocDash.Layout"
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
@@ -52,6 +54,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.requiredTests.RequiredTestsActivity"
+            android:exported="false"
+            android:label="@string/required_tests"
+            android:launchMode="singleTop" />
     </application>
 
 </manifest>
