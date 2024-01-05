@@ -49,15 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.example.docdash.R
-import com.example.docdash.data.serviceData.response.TestGetResponse
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.example.docdash.ui.taskDetails.TaskDetailsActivity
-import com.example.docdash.ui.taskDetails.TaskDetailsViewModel
 import com.example.docdash.ui.logout.LogoutActivity
-import com.example.docdash.ui.taskDetails.TaskDetailsActivity
 import com.google.gson.Gson
 
 
