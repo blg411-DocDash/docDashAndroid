@@ -108,37 +108,10 @@ class MyTasksViewModelTest {
     }
 
     @Test
-    fun myTasksNullRequestBodyTest() = runBlockingTest {
+    fun myTasksActiveEmptyListTest() = runBlockingTest {
         // Arrange
-        val taskList = null
-        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
-
-        // Mock the backend request
-        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
-        every { request.body() } returns null
-
-        // Act
-        viewModel.updateActiveTasks()
-
-        // Assert
-        assert(viewModel.activeTasks.value == taskList)
-
-        // Act
-        viewModel.updateCompletedTasks()
-
-        // Assert
-        assert(viewModel.completedTasks.value == taskList)
-    }
-
-    @Test
-    fun myTasksNormalResponseTest() = runBlockingTest {
-        // Arrange
-        val dummyTask = DummyTestValues().task
-
-        val taskList = listOf(dummyTask)
-        val taskListRequest = arrayOf(
-            dummyTask
-        )
+        val taskList = emptyList<TaskGetResponse>()
+        val taskListRequest = emptyArray<TaskGetResponse>()
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
 
         // Mock the backend request
@@ -152,19 +125,70 @@ class MyTasksViewModelTest {
 
         // Assert
         assert(viewModel.activeTasks.value == taskList)
-
-        // Act
-        viewModel.updateCompletedTasks()
-
-        // Assert
-        assert(viewModel.completedTasks.value == taskList)
     }
 
     @Test
-    fun myTasksApiErrorTest() = runBlockingTest {
+    fun myTasksActiveNullListTest() = runBlockingTest {
+        // Arrange
+        val taskList = null
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns mockk()
+        every { request.body()?.code } returns 0
+        every { request.body()?.data } returns taskList
+
+        // Act
+        viewModel.updateActiveTasks()
+
+        // Assert
+        assert(viewModel.activeTasks.value == taskList)
+    }
+
+    @Test
+    fun myTasksActiveNullRequestBodyTest() = runBlockingTest {
+        // Arrange
+        val activeTasksList = viewModel.activeTasks.value
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns null
+
+        // Act
+        viewModel.updateActiveTasks()
+
+        // Assert
+        assert(viewModel.activeTasks.value == activeTasksList)
+    }
+
+    @Test
+    fun myTasksActiveNormalResponseTest() = runBlockingTest {
+        // Arrange
+        val dummyTask = DummyTestValues().task
+
+        val taskList = listOf(dummyTask)
+        val taskListRequest = arrayOf(dummyTask)
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns mockk()
+        every { request.body()?.code } returns 0
+        every { request.body()?.data } returns taskListRequest
+
+        // Act
+        viewModel.updateActiveTasks()
+
+        // Assert
+        assert(viewModel.activeTasks.value == taskList)
+    }
+
+    @Test
+    fun myTasksActiveApiErrorTest() = runBlockingTest {
         // Arrange
         val taskListActive = viewModel.activeTasks.value
-        val taskListCompleted = viewModel.completedTasks.value
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
 
         // Mock the backend request
@@ -177,6 +201,95 @@ class MyTasksViewModelTest {
 
         // Assert
         assert(viewModel.activeTasks.value == taskListActive)
+    }
+
+    @Test
+    fun myTasksCompletedEmptyListTest() = runBlockingTest {
+        // Arrange
+        val taskList = emptyList<TaskGetResponse>()
+        val taskListRequest = emptyArray<TaskGetResponse>()
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns mockk()
+        every { request.body()?.code } returns 0
+        every { request.body()?.data } returns taskListRequest
+
+        // Act
+        viewModel.updateCompletedTasks()
+
+        // Assert
+        assert(viewModel.completedTasks.value == taskList)
+    }
+
+    @Test
+    fun myTasksCompletedNullListTest() = runBlockingTest {
+        // Arrange
+        val taskList = null
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns mockk()
+        every { request.body()?.code } returns 0
+        every { request.body()?.data } returns taskList
+
+        // Act
+        viewModel.updateCompletedTasks()
+
+        // Assert
+        assert(viewModel.completedTasks.value == taskList)
+    }
+
+    @Test
+    fun myTasksCompletedNullRequestBodyTest() = runBlockingTest {
+        // Arrange
+        val completedTasksList = viewModel.completedTasks.value
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns null
+
+        // Act
+        viewModel.updateCompletedTasks()
+
+        // Assert
+        assert(viewModel.completedTasks.value == completedTasksList)
+    }
+
+    @Test
+    fun myTasksCompletedNormalResponseTest() = runBlockingTest {
+        // Arrange
+        val dummyTask = DummyTestValues().task
+
+        val taskList = listOf(dummyTask)
+        val taskListRequest = arrayOf(dummyTask)
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body() } returns mockk()
+        every { request.body()?.code } returns 0
+        every { request.body()?.data } returns taskListRequest
+
+        // Act
+        viewModel.updateCompletedTasks()
+
+        // Assert
+        assert(viewModel.completedTasks.value == taskList)
+    }
+
+    @Test
+    fun myTasksCompletedApiErrorTest() = runBlockingTest {
+        // Arrange
+        val taskListCompleted = viewModel.completedTasks.value
+        val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
+
+        // Mock the backend request
+        coEvery { BackendAPI.backendAPI.getTasks(any(), any(), any()) } returns request
+        every { request.body()?.code } returns 1001
 
         // Act
         viewModel.updateCompletedTasks()

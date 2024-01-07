@@ -98,7 +98,7 @@ class TaskPoolViewModelTest {
     @Test
     fun taskPoolNullRequestBodyTest() = runBlockingTest {
         // Arrange
-        val taskList = null
+        val taskList = viewModel.taskList.value
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
 
         // Mock the backend request
