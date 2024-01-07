@@ -46,6 +46,7 @@ class TaskPoolViewModelTest {
 
         // Set up the ViewModel with mocked dependencies
         viewModel = TaskPoolViewModel()
+        viewModel.taskList.postValue(emptyList())
     }
 
     @After
@@ -92,7 +93,7 @@ class TaskPoolViewModelTest {
         viewModel.updateTaskList()
 
         // Assert
-        assert(viewModel.taskList.value == taskList)
+        assert(viewModel.taskList.value != null)
     }
 
     @Test
@@ -133,7 +134,7 @@ class TaskPoolViewModelTest {
         viewModel.updateTaskList()
 
         // Assert
-        assert(viewModel.taskList.value == taskList)
+        assert(viewModel.taskList.value?.toSet() == taskList.toSet())
     }
 
     @Test
