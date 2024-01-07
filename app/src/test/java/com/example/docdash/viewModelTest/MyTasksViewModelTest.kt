@@ -57,7 +57,7 @@ class MyTasksViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Empty List`() = runBlockingTest {
+    fun myTasksEmptyListTest() = runBlockingTest {
         // Arrange
         val taskList = emptyList<TaskGetResponse>()
         val taskListRequest = emptyArray<TaskGetResponse>()
@@ -83,7 +83,7 @@ class MyTasksViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Null List`() = runBlockingTest {
+    fun myTasksNullListTest() = runBlockingTest {
         // Arrange
         val taskList = null
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
@@ -108,7 +108,7 @@ class MyTasksViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Null Body`() = runBlockingTest {
+    fun myTasksNullRequestBodyTest() = runBlockingTest {
         // Arrange
         val taskList = null
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
@@ -131,17 +131,13 @@ class MyTasksViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Normal Response`() = runBlockingTest {
+    fun myTasksNormalResponseTest() = runBlockingTest {
         // Arrange
-        val taskList = listOf(
-            TaskGetResponse(
-                null, null, null, null, null, null, null, null, null, null, null, null, null
-            )
-        )
+        val dummyTask = DummyTestValues().task
+
+        val taskList = listOf(dummyTask)
         val taskListRequest = arrayOf(
-            TaskGetResponse(
-                null, null, null, null, null, null, null, null, null, null, null, null, null
-            )
+            dummyTask
         )
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
 
@@ -165,7 +161,7 @@ class MyTasksViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Error Code`() = runBlockingTest {
+    fun myTasksApiErrorTest() = runBlockingTest {
         // Arrange
         val taskListActive = viewModel.activeTasks.value
         val taskListCompleted = viewModel.completedTasks.value

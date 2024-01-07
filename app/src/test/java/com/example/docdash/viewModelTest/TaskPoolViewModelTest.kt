@@ -57,7 +57,7 @@ class TaskPoolViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Empty List`() = runBlockingTest {
+    fun taskPoolEmptyListTest() = runBlockingTest {
         // Arrange
         val taskList = emptyList<TaskGetResponse>()
         val taskListRequest = emptyArray<TaskGetResponse>()
@@ -77,7 +77,7 @@ class TaskPoolViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Null List`() = runBlockingTest {
+    fun taskPoolNullListTest() = runBlockingTest {
         // Arrange
         val taskList = null
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
@@ -96,7 +96,7 @@ class TaskPoolViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Null Body`() = runBlockingTest {
+    fun taskPoolNullRequestBodyTest() = runBlockingTest {
         // Arrange
         val taskList = null
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
@@ -113,17 +113,13 @@ class TaskPoolViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Normal Response`() = runBlockingTest {
+    fun taskPoolNormalResponseTest() = runBlockingTest {
+        val dummyTask = DummyTestValues().task
+
         // Arrange
-        val taskList = listOf(
-            TaskGetResponse(
-                null, null, null, null, null, null, null, null, null, null, null, null, null
-            )
-        )
+        val taskList = listOf(dummyTask)
         val taskListRequest = arrayOf(
-            TaskGetResponse(
-                null, null, null, null, null, null, null, null, null, null, null, null, null
-            )
+            dummyTask
         )
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
 
@@ -141,7 +137,7 @@ class TaskPoolViewModelTest {
     }
 
     @Test
-    fun `Backend Requests Returns Error Code`() = runBlockingTest {
+    fun taskPoolApiErrorTest() = runBlockingTest {
         // Arrange
         val taskList = viewModel.taskList.value
         val request = mockk<retrofit2.Response<ApiResponse<Array<TaskGetResponse>>>>()
