@@ -35,7 +35,7 @@ class TaskPoolViewModel : ViewModel() {
         }
     }
 
-    suspend fun makeTaskPoolRequest() {
+    private suspend fun makeTaskPoolRequest() {
         try {
             val request = BackendAPI.backendAPI.getTasks(status = "open", nurse = null)
             if (request.body()?.code == 0) {
